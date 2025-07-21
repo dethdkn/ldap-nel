@@ -1,0 +1,33 @@
+{
+  "name": "ldap-nel",
+  "type": "module",
+  "version": "0.0.1",
+  "private": true,
+  "packageManager": "pnpm@10.13.1",
+  "description": "description",
+  "author": {
+    "name": "Gabriel 'DethDKN' Rosa",
+    "email": "gabriel@rosa.dev.br",
+    "url": "https://rosa.dev.br"
+  },
+  "license": "MIT",
+  "funding": "https://github.com/sponsors/dethdkn",
+  "homepage": "https://ldap-nel.rosa.dev.br",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dethdkn/ldap-nel.git"
+  },
+  "bugs": "https://github.com/dethdkn/ldap-nel/issues",
+  "keywords": [
+    "ldap"
+  ],
+  "scripts": {
+    "frontend:build": "cd frontend && pnpm build",
+    "backend:build": "cd backend",
+    "docs:build": "cd docs && pnpm build",
+    "release": "bumpp"
+  },
+  "devDependencies": {
+    "bumpp": "^10.2.0"
+  }
+}
