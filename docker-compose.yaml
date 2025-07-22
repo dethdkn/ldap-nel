@@ -7,3 +7,4 @@ services:
       - 3000:3000
     environment:
       - JWT_SECRET=${JWT_SECRET}
+    restart: unless-stopped
