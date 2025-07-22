@@ -3,6 +3,7 @@ package passwords
 import (
 	"crypto/rand"
 	"encoding/base64"
+	"errors"
 	"fmt"
 	"strings"
 
@@ -19,9 +20,9 @@ func generateRandomSalt(length int) string {
 }
 
 // Generate a {CRYPT}$6$salt$... formatted hash
-func Sha512Crypt(password, salt string) string {
+func Sha512Crypt(password, salt string) (string, error) {
 	if len(salt) > 16 {
-		panic("Salt must be 16 characters or less")
+		return "", errors.New("salt must be 16 characters or less")
 	}
 	// If no salt is provided, generate a random one
 	if salt == "" {
@@ -29,9 +30,9 @@ func Sha512Crypt(password, salt string) string {
 	}
 	hashed, err := crypt.Crypt(password, salt)
 	if err != nil {
-		panic(err)
+		return "", err
 	}
-	return "{CRYPT}" + hashed
+	return "{CRYPT}" + hashed, nil
 }
 
 // Verifies a plaintext password against the stored {CRYPT} hash
