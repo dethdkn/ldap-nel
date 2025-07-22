@@ -5,3 +5,5 @@ services:
       - ./database:/database
     ports:
       - 3000:3000
+    environment:
+      - JWT_SECRET=${JWT_SECRET}
