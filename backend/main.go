@@ -11,7 +11,13 @@ func main() {
 
 	server := gin.Default()
 
+	server.GET("/", func(c *gin.Context) {
+		c.JSON(200, gin.H{
+			"message": "LDAP-NEL API",
+		})
+	})
+
 	routes.RegisterRoutes(server)
 
-	server.Run(":3001")
+	server.Run(":8080")
 }

@@ -1,0 +1,7 @@
+services:
+  ldap-nel:
+    image: dethdkn/ldap-nel:1
+    volumes:
+      - ./database:/database
+    ports:
+      - 3000:3000

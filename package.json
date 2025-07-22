@@ -22,9 +22,7 @@
     "ldap"
   ],
   "scripts": {
-    "frontend:build": "cd frontend && pnpm build",
-    "backend:build": "cd backend",
-    "docs:build": "cd docs && pnpm build",
+    "build": "docker build --platform=linux/amd64 -t dethdkn/ldap-nel .",
     "release": "bumpp"
   },
   "devDependencies": {

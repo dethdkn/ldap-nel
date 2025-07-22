@@ -10,7 +10,7 @@ import (
 var SQL *sql.DB
 
 func InitDB() (*sql.DB, error) {
-	SQL, err := sql.Open("sqlite3", "db.sqlite")
+	SQL, err := sql.Open("sqlite3", "/database/db.sqlite")
 	if err != nil {
 		return nil, err
 	}
