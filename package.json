@@ -23,7 +23,7 @@
   ],
   "scripts": {
     "build": "cd frontend && pnpm lint && pnpm typecheck && cd .. && docker build --platform=linux/amd64 -t dethdkn/ldap-nel:latest -t dethdkn/ldap-nel:$(node -p \"require('./package.json').version\") .",
-    "release": "pnpm build && bumpp && docker push dethdkn/ldap-nel:latest && docker push dethdkn/ldap-nel:$(node -p \"require('./package.json').version\")"
+    "release": "bumpp && pnpm build && docker push dethdkn/ldap-nel:latest && docker push dethdkn/ldap-nel:$(node -p \"require('./package.json').version\")"
   },
   "devDependencies": {
     "bumpp": "^10.2.0"
