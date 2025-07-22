@@ -3,6 +3,8 @@ package routes
 import "github.com/gin-gonic/gin"
 
 func RegisterRoutes(server *gin.Engine) {
+	server.GET("/users-empty", isUsersEmpty)
+	server.POST("/first-user", createFirstUser)
 	server.POST("/login", login)
 
 	authenticated := server.Group("/", authenticate)

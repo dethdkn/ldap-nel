@@ -119,3 +119,39 @@ func getUsers(c *gin.Context) {
 
 	c.JSON(200, users)
 }
+
+func isUsersEmpty(c *gin.Context) {
+	empty, err := models.IsUsersEmpty()
+	if err != nil {
+		c.JSON(500, gin.H{"message": "Failed to check if users are empty"})
+		return
+	}
+
+	c.JSON(200, gin.H{"empty": empty})
+}
+
+func createFirstUser(c *gin.Context) {
+	empty, err := models.IsUsersEmpty()
+	if err != nil {
+		c.JSON(500, gin.H{"message": "Failed to check if users are empty"})
+		return
+	}
+
+	if !empty {
+		c.JSON(400, gin.H{"message": "Users already exist"})
+		return
+	}
+
+	var user models.User
+	if err := c.ShouldBindJSON(&user); err != nil {
+		c.JSON(500, gin.H{"message": "Could not bind JSON"})
+		return
+	}
+
+	if err := user.Save(); err != nil {
+		c.JSON(500, gin.H{"message": "Failed to save user"})
+		return
+	}
+
+	c.JSON(201, gin.H{"message": "User created successfully"})
+}

@@ -157,3 +157,12 @@ func GetAllUsers() ([]*User, error) {
 
 	return users, nil
 }
+
+func IsUsersEmpty() (bool, error) {
+	row := db.SQL.QueryRow(`SELECT COUNT(*) FROM users`)
+	var count int
+	if err := row.Scan(&count); err != nil {
+		return false, err
+	}
+	return count == 0, nil
+}
