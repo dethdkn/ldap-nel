@@ -8,15 +8,14 @@ import (
 )
 
 type User struct {
-	ID       int64
-	Username string `binding:"required"`
-	Password string `binding:"required"`
-	Admin    bool
+	ID       int64  `json:"id"`
+	Username string `json:"username" binding:"required"`
+	Password string `json:"password" binding:"required"`
+	Admin    bool   `json:"admin"`
 }
 
 func (u *User) Validate() error {
-	query := `SELECT password, admin FROM users WHERE username = ?`
-	row := db.SQL.QueryRow(query, u.Username)
+	row := db.SQL.QueryRow(`SELECT password, admin FROM users WHERE username = ?`, u.Username)
 
 	var storedPassword string
 	var admin bool
@@ -36,8 +35,7 @@ func (u *User) Validate() error {
 }
 
 func (u *User) Save() error {
-	query := `INSERT INTO users (username, password, admin) VALUES (?, ?, ?)`
-	stmt, err := db.SQL.Prepare(query)
+	stmt, err := db.SQL.Prepare(`INSERT INTO users (username, password, admin) VALUES (?, ?, ?)`)
 
 	if err != nil {
 		return err
@@ -62,4 +60,100 @@ func (u *User) Save() error {
 
 	u.ID = userID
 	return nil
+}
+
+func (u *User) Update() error {
+	stmt, err := db.SQL.Prepare(`UPDATE users SET username = ?, password = ?, admin = ? WHERE id = ?`)
+
+	if err != nil {
+		return err
+	}
+
+	defer stmt.Close()
+
+	if u.Password != "" {
+		u.Password, err = passwords.Sha512Crypt(u.Password, "")
+		if err != nil {
+			return err
+		}
+	} else {
+		// If password is not set, we keep the existing one
+		var existingPassword string
+		row := db.SQL.QueryRow(`SELECT password FROM users WHERE id = ?`, u.ID)
+		if err := row.Scan(&existingPassword); err != nil {
+			return err
+		}
+		u.Password = existingPassword
+	}
+
+	_, err = stmt.Exec(u.Username, u.Password, u.Admin, u.ID)
+	return err
+}
+
+func (u *User) UpdatePassword() error {
+	stmt, err := db.SQL.Prepare(`UPDATE users SET password = ? WHERE username = ?`)
+	if err != nil {
+		return err
+	}
+
+	defer stmt.Close()
+
+	u.Password, err = passwords.Sha512Crypt(u.Password, "")
+	if err != nil {
+		return err
+	}
+
+	_, err = stmt.Exec(u.Password, u.Username)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (u *User) Delete() error {
+	stmt, err := db.SQL.Prepare(`DELETE FROM users WHERE id = ?`)
+
+	if err != nil {
+		return err
+	}
+
+	defer stmt.Close()
+
+	_, err = stmt.Exec(u.ID)
+	return err
+}
+
+func GetUserByID(id int64) (*User, error) {
+	row := db.SQL.QueryRow(`SELECT id, username, password, admin FROM users WHERE id = ?`, id)
+
+	var user User
+	if err := row.Scan(&user.ID, &user.Username, &user.Password, &user.Admin); err != nil {
+		return nil, errors.New("user not found")
+	}
+
+	return &user, nil
+}
+
+func GetAllUsers() ([]*User, error) {
+	rows, err := db.SQL.Query(`SELECT id, username, password, admin FROM users`)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var users []*User
+	for rows.Next() {
+		var user User
+		if err := rows.Scan(&user.ID, &user.Username, &user.Password, &user.Admin); err != nil {
+			return nil, err
+		}
+		users = append(users, &user)
+	}
+
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+
+	return users, nil
 }
