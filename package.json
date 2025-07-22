@@ -1,10 +1,10 @@
 {
   "name": "ldap-nel",
   "type": "module",
-  "version": "0.0.1",
+  "version": "0.0.1-alpha.1",
   "private": true,
   "packageManager": "pnpm@10.13.1",
-  "description": "description",
+  "description": "🔐 Modern web interface for LDAP administration",
   "author": {
     "name": "Gabriel 'DethDKN' Rosa",
     "email": "gabriel@rosa.dev.br",
@@ -22,8 +22,8 @@
     "ldap"
   ],
   "scripts": {
-    "build": "docker build --platform=linux/amd64 -t dethdkn/ldap-nel .",
-    "release": "bumpp"
+    "build": "cd frontend && pnpm lint && pnpm typecheck && cd .. && docker build --platform=linux/amd64 -t dethdkn/ldap-nel .",
+    "release": "pnpm build && bumpp && docker push dethdkn/ldap-nel:latest && docker push dethdkn/ldap-nel:$(node -p \"require('./package.json').version\")"
   },
   "devDependencies": {
     "bumpp": "^10.2.0"

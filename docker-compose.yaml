@@ -1,10 +1,11 @@
 services:
   ldap-nel:
-    image: dethdkn/ldap-nel:1
+    image: dethdkn/ldap-nel:latest
     volumes:
       - ./database:/database
     ports:
       - 3000:3000
     environment:
+      - SITE_URL=${SITE_URL}
       - JWT_SECRET=${JWT_SECRET}
     restart: unless-stopped
