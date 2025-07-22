@@ -12,7 +12,7 @@ type User struct {
 
 func (u *User) Save() error {
 	query := `INSERT INTO users (username, password) VALUES (?, ?)`
-	stmt, err := db.DB.Prepare(query)
+	stmt, err := db.SQL.Prepare(query)
 
 	if err != nil {
 		return err

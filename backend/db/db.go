@@ -3,13 +3,14 @@ package db
 import (
 	"database/sql"
 
+	"github.com/dethdkn/ldap-nel/backend/passwords"
 	_ "github.com/mattn/go-sqlite3"
 )
 
-var DB *sql.DB
+var SQL *sql.DB
 
 func InitDB() (*sql.DB, error) {
-	DB, err := sql.Open("sqlite3", "db.sqlite")
+	SQL, err := sql.Open("sqlite3", "db.sqlite")
 	if err != nil {
 		return nil, err
 	}
@@ -21,23 +22,23 @@ func InitDB() (*sql.DB, error) {
 		password TEXT NOT NULL
 	);`
 
-	_, err = DB.Exec(createTableQuery)
+	_, err = SQL.Exec(createTableQuery)
 	if err != nil {
 		return nil, err
 	}
 
 	// Create a default user if the table is empty
-	row := DB.QueryRow("SELECT COUNT(*) FROM users")
+	row := SQL.QueryRow("SELECT COUNT(*) FROM users")
 	var count int
 	if err := row.Scan(&count); err != nil {
 		return nil, err
 	}
 	if count == 0 {
-		_, err := DB.Exec("INSERT INTO users (username, password) VALUES (?, ?)", "nel", "123")
+		_, err := SQL.Exec("INSERT INTO users (username, password) VALUES (?, ?)", "nel", passwords.Sha512Crypt("test123", ""))
 		if err != nil {
 			return nil, err
 		}
 	}
 
-	return DB, nil
+	return SQL, nil
 }

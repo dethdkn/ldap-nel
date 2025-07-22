@@ -17,5 +17,5 @@ func createUser(c *gin.Context) {
 		return
 	}
 
-	c.JSON(201, gin.H{"message": "User created successfully", "user_id": user.ID})
+	c.JSON(201, gin.H{"message": "User created successfully", "id": user.ID})
 }
