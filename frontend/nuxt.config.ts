@@ -8,7 +8,7 @@ export default defineNuxtConfig({
   devtools: { enabled: true },
   app: { head: { templateParams: { separator: '•' } } },
   site: {
-    url: process.env.SITE_URL,
+    url: process.env.SITE_URL || 'http://localhost:3000',
     name: 'Ldap Nel',
     description: '🔐 Modern web interface for LDAP administration',
     indexable: false,
