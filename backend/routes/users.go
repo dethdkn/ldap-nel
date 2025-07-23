@@ -39,7 +39,7 @@ func createUser(c *gin.Context) {
 		return
 	}
 
-	c.JSON(201, gin.H{"message": "User created successfully"})
+	c.JSON(200, gin.H{"message": "User created successfully"})
 }
 
 func updateUser(c *gin.Context) {
@@ -94,13 +94,12 @@ func deleteUser(c *gin.Context) {
 }
 
 func getUser(c *gin.Context) {
-	var req struct {
-		ID int `json:"id" binding:"required"`
-	}
+	var req reqID
 	if err := c.ShouldBindJSON(&req); err != nil {
 		c.JSON(400, gin.H{"message": "Invalid request body"})
 		return
 	}
+
 	user, err := models.GetUserByID(int64(req.ID))
 	if err != nil {
 		c.JSON(404, gin.H{"message": "User not found"})
@@ -153,5 +152,5 @@ func createFirstUser(c *gin.Context) {
 		return
 	}
 
-	c.JSON(201, gin.H{"message": "User created successfully"})
+	c.JSON(200, gin.H{"message": "User created successfully"})
 }

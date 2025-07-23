@@ -36,7 +36,6 @@ func (u *User) Validate() error {
 
 func (u *User) Save() error {
 	stmt, err := db.SQL.Prepare(`INSERT INTO users (username, password, admin) VALUES (?, ?, ?)`)
-
 	if err != nil {
 		return err
 	}
@@ -64,7 +63,6 @@ func (u *User) Save() error {
 
 func (u *User) Update() error {
 	stmt, err := db.SQL.Prepare(`UPDATE users SET username = ?, password = ?, admin = ? WHERE id = ?`)
-
 	if err != nil {
 		return err
 	}
@@ -113,7 +111,6 @@ func (u *User) UpdatePassword() error {
 
 func (u *User) Delete() error {
 	stmt, err := db.SQL.Prepare(`DELETE FROM users WHERE id = ?`)
-
 	if err != nil {
 		return err
 	}
@@ -125,10 +122,10 @@ func (u *User) Delete() error {
 }
 
 func GetUserByID(id int64) (*User, error) {
-	row := db.SQL.QueryRow(`SELECT id, username, password, admin FROM users WHERE id = ?`, id)
+	row := db.SQL.QueryRow(`SELECT id, username, admin FROM users WHERE id = ?`, id)
 
 	var user User
-	if err := row.Scan(&user.ID, &user.Username, &user.Password, &user.Admin); err != nil {
+	if err := row.Scan(&user.ID, &user.Username, &user.Admin); err != nil {
 		return nil, errors.New("user not found")
 	}
 
@@ -136,7 +133,7 @@ func GetUserByID(id int64) (*User, error) {
 }
 
 func GetAllUsers() ([]*User, error) {
-	rows, err := db.SQL.Query(`SELECT id, username, password, admin FROM users`)
+	rows, err := db.SQL.Query(`SELECT id, username, admin FROM users`)
 	if err != nil {
 		return nil, err
 	}
@@ -145,7 +142,7 @@ func GetAllUsers() ([]*User, error) {
 	var users []*User
 	for rows.Next() {
 		var user User
-		if err := rows.Scan(&user.ID, &user.Username, &user.Password, &user.Admin); err != nil {
+		if err := rows.Scan(&user.ID, &user.Username, &user.Admin); err != nil {
 			return nil, err
 		}
 		users = append(users, &user)

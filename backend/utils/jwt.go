@@ -12,19 +12,19 @@ func JWTGenerate(username string, admin bool) (string, error) {
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
 		"username": username,
 		"admin":    admin,
-		"exp":      time.Now().Add(time.Hour * 2).Unix(),
+		"exp":      time.Now().Add(time.Hour * 8).Unix(),
 	})
 
 	return token.SignedString([]byte(os.Getenv("JWT_SECRET")))
 }
 
 func JWTValidate(tokenString string) (string, bool, error) {
-	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
+	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (any, error) {
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
 			return nil, errors.New("unexpected signing method")
 		}
 		return []byte(os.Getenv("JWT_SECRET")), nil
-	})
+	}, jwt.WithExpirationRequired(), jwt.WithValidMethods([]string{"HS256"}))
 
 	if err != nil {
 		return "", false, err

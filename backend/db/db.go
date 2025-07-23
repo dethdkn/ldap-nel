@@ -14,15 +14,30 @@ func InitDB() (*sql.DB, error) {
 		return nil, err
 	}
 
-	createTableQuery := `
-	CREATE TABLE IF NOT EXISTS users (
-		id INTEGER PRIMARY KEY AUTOINCREMENT,
-		username TEXT NOT NULL UNIQUE,
-		password TEXT NOT NULL,
-		admin BOOLEAN DEFAULT FALSE
-	);`
+	_, err = SQL.Exec(`
+		CREATE TABLE IF NOT EXISTS users (
+			id INTEGER PRIMARY KEY AUTOINCREMENT,
+			username TEXT NOT NULL UNIQUE,
+			password TEXT NOT NULL,
+			admin BOOLEAN DEFAULT FALSE
+		);
+	`)
+	if err != nil {
+		return nil, err
+	}
 
-	_, err = SQL.Exec(createTableQuery)
+	_, err = SQL.Exec(`
+		CREATE TABLE IF NOT EXISTS ldaps (
+			id INTEGER PRIMARY KEY AUTOINCREMENT,
+			name TEXT NOT NULL,
+			url TEXT NOT NULL,
+			port INTEGER NOT NULL,
+			ssl BOOLEAN DEFAULT FALSE,
+			base_dn TEXT NOT NULL,
+			bind_dn TEXT NOT NULL,
+			bind_pass TEXT NOT NULL
+		);
+	`)
 	if err != nil {
 		return nil, err
 	}
