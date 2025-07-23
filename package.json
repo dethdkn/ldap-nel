@@ -12,7 +12,7 @@
   },
   "license": "MIT",
   "funding": "https://github.com/sponsors/dethdkn",
-  "homepage": "https://ldap-nel.rosa.dev.br",
+  "homepage": "https://ldap-nel.vercel.app",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/dethdkn/ldap-nel.git"
