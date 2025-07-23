@@ -7,6 +7,7 @@ export default defineNuxtConfig({
   },
   devtools: { enabled: true },
   app: { head: { templateParams: { separator: '•' } } },
+  css: ['~/assets/main.css'],
   site: {
     url: process.env.SITE_URL || 'http://localhost:3000',
     name: 'Ldap Nel',
