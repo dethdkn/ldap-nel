@@ -3,6 +3,7 @@
 </script>
 
 <template>
+  <Nav />
   <h1>
     a
   </h1>

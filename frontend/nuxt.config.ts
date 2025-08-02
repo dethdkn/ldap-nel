@@ -1,4 +1,5 @@
 import process from 'node:process'
+import { version } from '../package.json'
 
 export default defineNuxtConfig({
   modules: ['@nuxt/image', '@nuxt/ui', '@nuxtjs/seo', '@vueuse/nuxt', 'nuxt-security'],
@@ -14,9 +15,13 @@ export default defineNuxtConfig({
     description: '🔐 Modern web interface for LDAP administration',
     indexable: false,
   },
+  runtimeConfig: {
+    public: { version },
+  },
   routeRules: {
-    '/api/**': { proxy: { to: 'http://localhost:8080/**' } },
+    '/server/**': { proxy: { to: 'http://localhost:8080/**' } },
   },
   compatibilityDate: '2025-07-15',
   linkChecker: { enabled: false },
+  sitemap: { enabled: false },
 })
