@@ -36,11 +36,6 @@ func createUser(c *gin.Context) {
 
 	user.Username = utils.SanitizeUsername(user.Username)
 
-	if !utils.ValidatePassword(user.Password) {
-		c.JSON(400, gin.H{"message": "Password must be at least 8 characters long, contain at least one uppercase letter, one lowercase letter, one digit, and one special character"})
-		return
-	}
-
 	exists, err := models.AlreadyExists(user.Username)
 	if err != nil {
 		c.JSON(500, gin.H{"message": "Failed to check if user exists"})
@@ -49,6 +44,11 @@ func createUser(c *gin.Context) {
 
 	if exists {
 		c.JSON(400, gin.H{"message": "User already exists"})
+		return
+	}
+
+	if !utils.ValidatePassword(user.Password) {
+		c.JSON(400, gin.H{"message": "Password must be at least 8 characters long, contain at least one uppercase letter, one lowercase letter, one digit, and one special character"})
 		return
 	}
 
@@ -65,6 +65,34 @@ func updateUser(c *gin.Context) {
 	if err := c.ShouldBindJSON(&user); err != nil {
 		c.JSON(500, gin.H{"message": "Could not bind JSON"})
 		return
+	}
+
+	originalUser, err := models.GetUserByID(user.ID)
+	if err != nil {
+		c.JSON(404, gin.H{"message": "User not found"})
+		return
+	}
+
+	user.Username = utils.SanitizeUsername(user.Username)
+
+	if originalUser.Username != user.Username {
+		exists, err := models.AlreadyExists(user.Username)
+		if err != nil {
+			c.JSON(500, gin.H{"message": "Failed to check if user exists"})
+			return
+		}
+
+		if exists {
+			c.JSON(400, gin.H{"message": "User already exists"})
+			return
+		}
+	}
+
+	if user.Password != "" {
+		if !utils.ValidatePassword(user.Password) {
+			c.JSON(400, gin.H{"message": "Password must be at least 8 characters long, contain at least one uppercase letter, one lowercase letter, one digit, and one special character"})
+			return
+		}
 	}
 
 	if err := user.Update(); err != nil {
