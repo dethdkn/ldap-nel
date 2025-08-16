@@ -1,13 +1,13 @@
 import type { DropdownMenuItem } from '@nuxt/ui'
 
 export default () => {
-  const { user, clearSession } = useUserSession()
+  const { user, clearUserSession } = useUserSession()
   const passwordModal = usePasswordModal()
   const { modal: settingsModal } = useSettingsModal()
   const aboutModal = useAboutModal()
 
-  const logout = async () => {
-    await clearSession()
+  const logout = () => {
+    clearUserSession()
     navigateTo('/login')
   }
 
@@ -15,7 +15,6 @@ export default () => {
     const LogoutItem = { icon: 'i-lucide-log-out', label: 'Logout', onSelect: logout }
 
     const adminMenu = [
-      { icon: 'i-lucide-key', label: 'Update Password', onSelect: () => passwordModal.value = true },
       { icon: 'i-lucide-settings', label: 'Settings  ', onSelect: () => settingsModal.value = true },
       { icon: 'i-lucide-info', label: 'About  ', onSelect: () => aboutModal.value = true },
       LogoutItem,
@@ -23,11 +22,11 @@ export default () => {
 
     const menu: DropdownMenuItem[][] = [
       [{ label: user.value.username || '???', icon: 'i-lucide-user', disabled: true }],
-      [],
+      [{ icon: 'i-lucide-key', label: 'Update Password', onSelect: () => passwordModal.value = true }],
     ]
 
-    if(user.value.admin) menu[1] = adminMenu
-    else menu[1] = [LogoutItem]
+    if(user.value.admin) menu[1]?.push(...adminMenu)
+    else menu[1]?.push(LogoutItem)
 
     return menu
   })

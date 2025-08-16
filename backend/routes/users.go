@@ -24,7 +24,7 @@ func login(c *gin.Context) {
 		return
 	}
 
-	c.JSON(200, gin.H{"message": "Login successful", "token": token})
+	c.JSON(200, gin.H{"message": "Login successful", "token": token, "isAdmin": user.Admin})
 }
 
 func createUser(c *gin.Context) {
@@ -146,6 +146,8 @@ func createFirstUser(c *gin.Context) {
 		c.JSON(500, gin.H{"message": "Could not bind JSON"})
 		return
 	}
+
+	user.Admin = true // First user is always admin
 
 	if err := user.Save(); err != nil {
 		c.JSON(500, gin.H{"message": "Failed to save user"})

@@ -3,32 +3,30 @@ definePageMeta({
   layout: false,
   middleware: 'setup',
 })
-useHead({ title: 'Login' })
+useHead({ title: 'Setup' })
 
 const toast = useToast()
 const themeMenu = useThemeMenu()
 const { start, finish, isLoading } = useLoadingIndicator()
-const { setUserSession } = useUserSession()
 
-const state = ref<Auth>({ username: '', password: '' })
-async function login(){
+const state = ref<User>({ username: '', password: '', repeatPassword: '', admin: true })
+async function setup(){
   start()
 
-  const body = authSchema.safeParse(state.value)
+  const body = userSchema.safeParse(state.value)
   if(!body.success){
     for(const e of body.error.issues) toast.add({ title: e.message, icon: 'i-lucide-shield-alert', color: 'error' })
     return finish({ error: true })
   }
 
-  const res = await $fetch<{ message: string, token: string, isAdmin: boolean }>('/server/login', { method: 'post', body: body.data })
+  const res = await $fetch<{ message: string }>('/server/first-user', { method: 'post', body: body.data })
     .catch(error => { toast.add({ title: error.data.message, icon: 'i-lucide-shield-alert', color: 'error' }) })
 
   if(!res) return finish({ error: true })
 
-  setUserSession({ username: state.value.username, admin: res.isAdmin, token: res.token })
   finish({ force: true })
   toast.add({ title: res.message, icon: 'i-lucide-badge-check', color: 'success' })
-  await navigateTo('/')
+  await navigateTo('/login')
 }
 </script>
 
@@ -48,14 +46,17 @@ async function login(){
               </UDropdownMenu>
             </div>
           </div>
-          <UForm :schema="authSchema" :state class="w-full space-y-4 md:space-y-6" @submit="login">
+          <UForm :schema="userSchema" :state class="w-full space-y-4 md:space-y-6" @submit="setup">
             <UFormField label="Username" name="username">
               <UInput v-model="state.username" icon="i-lucide-user" size="lg" class="w-full" />
             </UFormField>
             <UFormField label="Password" name="password">
-              <UInput v-model="state.password" icon="i-lucide-key" size="lg" type="password" class="w-full" />
+              <UInput v-model="state.password" icon="i-lucide-key-round" size="lg" type="password" class="w-full" />
             </UFormField>
-            <UButton label="Login" icon="i-lucide-log-in" color="success" variant="solid" block type="submit" :loading="isLoading" />
+            <UFormField label="Repeat Password" name="repeatPassword">
+              <UInput v-model="state.repeatPassword" icon="i-lucide-shield-check" size="lg" type="password" class="w-full" />
+            </UFormField>
+            <UButton label="Create User" icon="i-lucide-user-plus" color="success" variant="solid" block type="submit" :loading="isLoading" />
           </UForm>
         </div>
       </div>

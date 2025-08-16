@@ -37,3 +37,18 @@ func authenticateAdmin(c *gin.Context) {
 
 	c.Next()
 }
+
+func checkSession(c *gin.Context) {
+	username, exists := c.Get("username")
+	if !exists {
+		c.JSON(401, gin.H{"message": "Session expired"})
+		return
+	}
+	admin, exists := c.Get("admin")
+	if !exists {
+		c.JSON(401, gin.H{"message": "Session expired"})
+		return
+	}
+
+	c.JSON(200, gin.H{"username": username, "isAdmin": admin})
+}

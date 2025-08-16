@@ -12,6 +12,7 @@ func RegisterRoutes(server *gin.Engine) {
 	server.POST("/login", login)
 
 	authenticated := server.Group("/", authenticate)
+	authenticated.GET("/check-session", checkSession)
 	authenticated.GET("/ldaps", getLdaps)
 	authenticated.PUT("/password", updatePassword)
 
