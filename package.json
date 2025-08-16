@@ -27,6 +27,6 @@
     "release": "pnpm prerelease && bumpp && pnpm build && docker push dethdkn/ldap-nel:latest && docker push dethdkn/ldap-nel:$(node -p \"require('./package.json').version\")"
   },
   "devDependencies": {
-    "bumpp": "^10.2.2"
+    "bumpp": "^10.2.3"
   }
 }
