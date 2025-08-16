@@ -1,5 +1,4 @@
-import process from 'node:process'
-import { version } from '../package.json'
+import { description, version } from '../package.json'
 
 export default defineNuxtConfig({
   modules: ['@nuxt/image', '@nuxt/ui', '@nuxtjs/seo', '@vueuse/nuxt', 'nuxt-security'],
@@ -10,9 +9,8 @@ export default defineNuxtConfig({
   app: { head: { templateParams: { separator: '•' } } },
   css: ['~/assets/main.css'],
   site: {
-    url: process.env.SITE_URL || 'http://localhost:3000',
     name: 'Ldap Nel',
-    description: '🔐 Modern web interface for LDAP administration',
+    description,
     indexable: false,
   },
   runtimeConfig: {

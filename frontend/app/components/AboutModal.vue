@@ -4,7 +4,7 @@ const { version } = useRuntimeConfig().public
 </script>
 
 <template>
-  <UModal v-model:open="aboutModal" title="About" :ui="{ footer: 'justify-end' }">
+  <UModal v-model:open="aboutModal" title="About">
     <template #body>
       <div class="flex flex-col items-center justify-center space-y-4">
         <NuxtImg src="/nel.png" alt="Ldap Nel" class="w-32" />

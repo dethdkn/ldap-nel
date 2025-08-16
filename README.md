@@ -30,7 +30,6 @@ Copy the contents from the [example](https://github.com/dethdkn/ldap-nel/blob/ma
 
 3. **Create a `.env` file:**\
 Use the [`.env.example`](https://github.com/dethdkn/ldap-nel/blob/main/.env.example) as a starting point and adjust the values to match your environment.\
-🌐 SITE_URL: Defaults to http://localhost:3000 if not set.\
 🔑 JWT_SECRET: At least 32 characters\
 🔐 ENCRYPTION_KEY: This must be a base64-encoded string that decodes to 32 bytes (AES-256).
 
@@ -52,8 +51,7 @@ docker compose up -d --force-recreate
 ```
 
 6.	**(Optional) Set up a reverse proxy:**\
-For production use, you can put the Docker app behind an Nginx reverse proxy to serve it on ports 80 or 443.\
-If you configure a custom domain or HTTPS, don’t forget to update the URL in your .env file accordingly.
+For production use, you can put the Docker app behind an Nginx reverse proxy to serve it on ports 80 or 443.
 
 ## ⬆️ Upgrade
 

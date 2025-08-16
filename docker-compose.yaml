@@ -6,7 +6,6 @@ services:
     ports:
       - 3000:3000
     environment:
-      - SITE_URL=${SITE_URL}
       - JWT_SECRET=${JWT_SECRET}
       - ENCRYPTION_KEY=${ENCRYPTION_KEY}
     restart: unless-stopped
