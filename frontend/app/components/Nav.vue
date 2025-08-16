@@ -15,9 +15,6 @@ const selectedLdap = ref('')
       </div>
       <div class="flex items-center space-x-2 sm:mt-0">
         <USelect v-model="selectedLdap" :items="['a']" size="sm" class="w-24" />
-        <UTooltip text="New Ldap Connection" :content="{side: 'bottom'}">
-          <UButton icon="i-lucide-file-plus-2" size="sm" color="neutral" square variant="ghost" />
-        </UTooltip>
         <UDropdownMenu :items="themeMenu">
           <UButton icon="i-lucide-swatch-book" size="sm" color="neutral" square variant="ghost" />
         </UDropdownMenu>

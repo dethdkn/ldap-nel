@@ -34,6 +34,24 @@ func createUser(c *gin.Context) {
 		return
 	}
 
+	user.Username = utils.SanitizeUsername(user.Username)
+
+	if !utils.ValidatePassword(user.Password) {
+		c.JSON(400, gin.H{"message": "Password must be at least 8 characters long, contain at least one uppercase letter, one lowercase letter, one digit, and one special character"})
+		return
+	}
+
+	exists, err := models.AlreadyExists(user.Username)
+	if err != nil {
+		c.JSON(500, gin.H{"message": "Failed to check if user exists"})
+		return
+	}
+
+	if exists {
+		c.JSON(400, gin.H{"message": "User already exists"})
+		return
+	}
+
 	if err := user.Save(); err != nil {
 		c.JSON(500, gin.H{"message": "Failed to save user"})
 		return

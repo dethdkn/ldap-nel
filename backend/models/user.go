@@ -163,3 +163,12 @@ func IsUsersEmpty() (bool, error) {
 	}
 	return count == 0, nil
 }
+
+func AlreadyExists(username string) (bool, error) {
+	row := db.SQL.QueryRow(`SELECT COUNT(*) FROM users WHERE username = ?`, username)
+	var count int
+	if err := row.Scan(&count); err != nil {
+		return false, err
+	}
+	return count > 0, nil
+}

@@ -1,5 +1,1 @@
-export default createGlobalState(() => {
-  const modal = ref(false)
-
-  return { modal }
-})
+export default createGlobalState(() => ref(false))

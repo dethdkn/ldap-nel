@@ -3,7 +3,7 @@ import type { DropdownMenuItem } from '@nuxt/ui'
 export default () => {
   const { user, clearUserSession } = useUserSession()
   const passwordModal = usePasswordModal()
-  const { modal: settingsModal } = useSettingsModal()
+  const settingsModal = useSettingsModal()
   const aboutModal = useAboutModal()
 
   const logout = () => {

@@ -9,7 +9,7 @@ const toast = useToast()
 const themeMenu = useThemeMenu()
 const { start, finish, isLoading } = useLoadingIndicator()
 
-const state = ref<User>({ username: '', password: '', repeatPassword: '', admin: true })
+const state = ref<User>({ id: 0, username: '', password: '', repeatPassword: '', admin: true })
 async function setup(){
   start()
 
