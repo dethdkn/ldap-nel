@@ -75,3 +75,12 @@ func getLdaps(c *gin.Context) {
 
 	c.JSON(200, ldaps)
 }
+
+func getLdapsNames(c *gin.Context) {
+	ldaps, err := models.GetAllLdapsNames()
+	if err != nil {
+		c.JSON(500, gin.H{"message": "Failed to retrieve LDAP configurations"})
+		return
+	}
+	c.JSON(200, ldaps)
+}

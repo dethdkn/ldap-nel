@@ -132,3 +132,24 @@ func GetAllLdaps() ([]*Ldap, error) {
 	}
 	return ldaps, nil
 }
+
+func GetAllLdapsNames() ([]string, error) {
+	row, err := db.SQL.Query(`SELECT name FROM ldaps`)
+	if err != nil {
+		return nil, err
+	}
+	defer row.Close()
+
+	var names []string
+	for row.Next() {
+		var name string
+		if err := row.Scan(&name); err != nil {
+			return nil, err
+		}
+		names = append(names, name)
+	}
+	if err := row.Err(); err != nil {
+		return nil, err
+	}
+	return names, nil
+}

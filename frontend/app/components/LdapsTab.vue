@@ -1,6 +1,8 @@
 <script setup lang='ts'>
 import type { TableColumn } from '@nuxt/ui'
 
+const { refreshLdaps } = await useLdapConnection()
+
 const createLdapModal = ref(false)
 
 const updateLdapModal = ref(false)
@@ -22,6 +24,11 @@ const UButton = resolveComponent('UButton')
 const UTooltip = resolveComponent('UTooltip')
 
 const { data, refresh } = await useFetch<Ldap[]>('/server/ldaps')
+
+async function globalRefresh(){
+  await refreshLdaps()
+  await refresh()
+}
 
 const columns: TableColumn<Ldap>[] = [
   { accessorKey: 'id', header: 'ID', cell: ({ row }) => h(UBadge, { variant: 'subtle', color: 'neutral' }, () => row.getValue('id')) },
@@ -51,7 +58,7 @@ const columns: TableColumn<Ldap>[] = [
     <UButton label="Create Ldap Connection" icon="i-lucide-folder-plus" color="neutral" variant="outline" size="sm" @click="createLdapModal = true" />
   </div>
   <UTable :data :columns />
-  <LdapCreateModal v-model="createLdapModal" @refresh="refresh" />
-  <LdapUpdateModal v-model="updateLdapModal" v-model:state="updateLdapState" @refresh="refresh" />
-  <LdapDeleteModal v-model="deleteLdapModal" v-model:state="deleteLdapState" @refresh="refresh" />
+  <LdapCreateModal v-model="createLdapModal" @refresh="globalRefresh" />
+  <LdapUpdateModal v-model="updateLdapModal" v-model:state="updateLdapState" @refresh="globalRefresh" />
+  <LdapDeleteModal v-model="deleteLdapModal" v-model:state="deleteLdapState" @refresh="globalRefresh" />
 </template>

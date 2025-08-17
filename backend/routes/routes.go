@@ -13,7 +13,7 @@ func RegisterRoutes(server *gin.Engine) {
 
 	authenticated := server.Group("/", authenticate)
 	authenticated.GET("/check-session", checkSession)
-	authenticated.GET("/ldaps", getLdaps)
+	authenticated.GET("/saved-ldaps", getLdapsNames)
 	authenticated.PUT("/password", updatePassword)
 
 	authenticatedAdmin := authenticated.Group("/", authenticateAdmin)
@@ -24,6 +24,7 @@ func RegisterRoutes(server *gin.Engine) {
 	authenticatedAdmin.DELETE("/user", deleteUser)
 
 	authenticatedAdmin.GET("/ldap", getLdap)
+	authenticatedAdmin.GET("/ldaps", getLdaps)
 	authenticatedAdmin.POST("/ldap", createLdap)
 	authenticatedAdmin.PUT("/ldap", updateLdap)
 	authenticatedAdmin.DELETE("/ldap", deleteLdap)
