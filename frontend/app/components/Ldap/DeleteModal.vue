@@ -35,7 +35,11 @@ async function deleteUser(){
   state.value = { id: 0, name: '', url: '', port: 389, ssl: false, base_dn: '', bind_dn: '', bind_pass: '' }
 }
 
-whenever(() => !model.value, () => state.value = { id: 0, name: '', url: '', port: 389, ssl: false, base_dn: '', bind_dn: '', bind_pass: '' })
+whenever(() => !model.value, () => {
+  state.value = { id: 0, name: '', url: '', port: 389, ssl: false, base_dn: '', bind_dn: '', bind_pass: '' }
+  validation1.value = ''
+  validation2.value = ''
+})
 </script>
 
 <template>

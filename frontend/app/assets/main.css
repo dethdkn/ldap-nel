@@ -6,3 +6,6 @@
     cursor: pointer;
   }
 }
+@theme {
+  --spacing-content: calc(100vh - 64px);
+}

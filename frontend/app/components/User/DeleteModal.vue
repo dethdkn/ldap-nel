@@ -35,7 +35,11 @@ async function deleteUser(){
   state.value = { id: 0, username: '', password: '', repeatPassword: '', admin: false }
 }
 
-whenever(() => !model.value, () => state.value = { id: 0, username: '', password: '', repeatPassword: '', admin: false })
+whenever(() => !model.value, () => {
+  state.value = { id: 0, username: '', password: '', repeatPassword: '', admin: false }
+  validation1.value = ''
+  validation2.value = ''
+})
 </script>
 
 <template>
