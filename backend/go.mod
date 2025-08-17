@@ -1,6 +1,6 @@
 module github.com/dethdkn/ldap-nel/backend
 
-go 1.24.4
+go 1.25.0
 
 require (
 	github.com/amoghe/go-crypt v0.0.0-20220222110647-20eada5f5964
