@@ -105,3 +105,19 @@ func getChilds(c *gin.Context) {
 
 	c.JSON(200, gin.H{"dn": dn, "childs": children})
 }
+
+func getAttributes(c *gin.Context) {
+	var req reqLdap
+	if err := c.ShouldBindJSON(&req); err != nil {
+		c.JSON(400, gin.H{"message": "Could not bind JSON"})
+		return
+	}
+
+	attributes, err := models.GetLdapAttributes(req.ID, req.DN)
+	if err != nil {
+		c.JSON(500, gin.H{"message": "Failed to retrieve attributes"})
+		return
+	}
+
+	c.JSON(200, gin.H{"attributes": attributes})
+}

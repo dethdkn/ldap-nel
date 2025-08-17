@@ -51,7 +51,7 @@ export function buildLdapTree(baseDn: string, dns: string[], onSelect: (e: any)=
 
       let node = index.get(key)
       if(!node){
-        node = { label: rdn, icon: getLdapIcon(rdn), expandedIcon: 'i-lucide-folder-open', onSelect, children: [] }
+        node = { label: rdn, fullDn: key, icon: getLdapIcon(rdn), expandedIcon: 'i-lucide-folder-open', onSelect, children: [] }
         parentNode.children.push(node)
         index.set(key, node)
       }
