@@ -14,8 +14,8 @@ type Ldap struct {
 	Port     int64  `json:"port" binding:"required"`
 	SSL      bool   `json:"ssl"`
 	BaseDN   string `json:"base_dn" binding:"required"`
-	BindDN   string `json:"bind_dn" binding:"required"`
-	BindPass string `json:"bind_pass" binding:"required"`
+	BindDN   string `json:"bind_dn"`
+	BindPass string `json:"bind_pass"`
 }
 
 func (l *Ldap) Save() error {
@@ -26,12 +26,14 @@ func (l *Ldap) Save() error {
 
 	defer stmt.Close()
 
-	l.BindPass, err = utils.Encrypt(l.BindPass)
-	if err != nil {
-		return err
+	if l.BindPass != "" {
+		l.BindPass, err = utils.Encrypt(l.BindPass)
+		if err != nil {
+			return err
+		}
 	}
 
-	result, err := stmt.Exec(l.URL, l.Port, l.SSL, l.BaseDN, l.BindDN, l.BindPass)
+	result, err := stmt.Exec(l.Name, l.URL, l.Port, l.SSL, l.BaseDN, l.BindDN, l.BindPass)
 	if err != nil {
 		return err
 	}

@@ -35,8 +35,8 @@ func InitDB() (*sql.DB, error) {
 			port INTEGER NOT NULL,
 			ssl BOOLEAN DEFAULT FALSE,
 			base_dn TEXT NOT NULL,
-			bind_dn TEXT NOT NULL,
-			bind_pass TEXT NOT NULL
+			bind_dn TEXT,
+			bind_pass TEXT
 		);
 	`)
 	if err != nil {

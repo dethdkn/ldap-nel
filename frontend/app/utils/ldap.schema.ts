@@ -1,0 +1,14 @@
+import { z } from 'zod'
+
+export const ldapSchema = z.object({
+  id: z.number().default(0),
+  name: z.string().min(1, 'Name is required').trim(),
+  url: z.string().min(1, 'URL is required').trim().transform(val => val.replaceAll('ldap://', '').replaceAll('ldaps://', '')),
+  port: z.number().min(1, 'Port is required').max(65535, 'Port must be between 1 and 65535'),
+  ssl: z.boolean().default(false),
+  base_dn: z.string().min(1, 'Base DN is required').trim(),
+  bind_dn: z.string().optional(),
+  bind_pass: z.string().optional(),
+})
+
+export type Ldap = z.infer<typeof ldapSchema>
