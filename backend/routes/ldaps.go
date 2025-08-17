@@ -13,7 +13,7 @@ func createLdap(c *gin.Context) {
 	}
 
 	if err := ldap.Save(); err != nil {
-		c.JSON(500, gin.H{"message": err})
+		c.JSON(500, gin.H{"message": err.Error()})
 		return
 	}
 
@@ -28,7 +28,7 @@ func updateLdap(c *gin.Context) {
 	}
 
 	if err := ldap.Update(); err != nil {
-		c.JSON(500, gin.H{"message": "Failed to update LDAP configuration"})
+		c.JSON(500, gin.H{"message": err.Error()})
 		return
 	}
 
