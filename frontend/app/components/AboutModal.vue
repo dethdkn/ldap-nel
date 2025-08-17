@@ -14,6 +14,7 @@ const { version } = useRuntimeConfig().public
         <div class="flex items-center justify-center space-x-2">
           <UButton icon="i-lucide-globe" size="md" color="neutral" variant="outline" to="https://ldap-nel.vercel.app" external target="_blank" />
           <UButton icon="i-lucide-github" size="md" color="neutral" variant="outline" to="https://github.com/dethdkn/ldap-nel" external target="_blank" />
+          <UButton icon="i-lucide-history" size="md" color="neutral" variant="outline" to="https://github.com/dethdkn/ldap-nel/releases" external target="_blank" />
         </div>
         <div class="text-center">
           <p>
