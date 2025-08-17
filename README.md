@@ -67,6 +67,38 @@ docker compose pull
 docker compose up -d --force-recreate
 ```
 
+## 🎯 Todo
+
+### Search
+- [ ] Add support for **JPEG image**
+- [ ] Enable **hover to preview JPEG image**
+- [ ] Add **Search DN** option in the UI
+- [ ] Add **refresh** option
+
+### Add
+- [ ] Add option to create a **new DN**
+
+### Update
+- [ ] Implement **attribute update** functionality
+- [ ] Support common **LDAP password encryption** options when updating passwords
+- [ ] Add **copy** option
+- [ ] Add **move** option
+
+### Delete
+- [ ] Implement **attribute deletion**
+- [ ] Add option to delete a **DN**
+- [ ] Add **smart delete** (context-aware cleanup)
+
+### Export
+- [ ] Add **export** option
+
+### Import
+- [ ] Add **import** option
+
+### Docs
+- [ ] Add **images** to README
+- [ ] Create **VitePress** documentation
+
 ## 📝 License
 
 Copyright © 2025 [Gabriel 'DethDKN' Rosa](https://github.com/dethdkn)\
