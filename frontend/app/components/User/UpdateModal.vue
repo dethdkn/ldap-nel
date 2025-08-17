@@ -49,7 +49,7 @@ whenever(() => !model.value, () => state.value = { id: 0, username: '', password
       </UForm>
     </template>
     <template #footer="{ close }">
-      <UButton label="Cancel" color="neutral" variant="outline" :loading="isLoading" @click="close" />
+      <UButton label="Cancel" color="neutral" variant="outline" :disabled="isLoading" @click="close" />
       <UButton label="Submit" color="neutral" :loading="isLoading" @click="updateUser" />
     </template>
   </UModal>

@@ -55,7 +55,7 @@ whenever(() => !model.value, () => {
       </div>
     </template>
     <template #footer="{ close }">
-      <UButton label="Cancel" color="neutral" variant="outline" :loading="isLoading" @click="close" />
+      <UButton label="Cancel" color="neutral" variant="outline" :disabled="isLoading" @click="close" />
       <UButton label="Delete" color="error" :loading="isLoading" :disabled="!(validation1 === state.name && validation2 === 'delete my connection')" @click="deleteUser" />
     </template>
   </UModal>
