@@ -1,13 +1,21 @@
 {
   "name": "ldap-nel-docs",
-  "private": true,
   "type": "module",
+  "private": true,
+  "packageManager": "pnpm@10.14.0",
   "scripts": {
     "dev": "vitepress dev",
     "build": "vitepress build",
-    "preview": "vitepress preview"
+    "preview": "vitepress preview",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix"
   },
   "dependencies": {
-    "vitepress": "^1.6.3"
+    "@vercel/analytics": "^1.5.0",
+    "vitepress": "^1.6.4"
+  },
+  "devDependencies": {
+    "@dethdkn/eslint-config": "^3.3.3",
+    "eslint": "^9.33.0"
   }
 }

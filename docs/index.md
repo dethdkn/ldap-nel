@@ -2,22 +2,13 @@
 layout: home
 
 hero:
-  name: "ldap-nel-docs"
-  text: "description"
-  tagline: My great project tagline
+  name: "Ldap Nel"
+  tagline: 🔐 Modern web interface for LDAP administration
+  image:
+    src: /nel.png
+    alt: ldap-nel
   actions:
-    - theme: brand
-      text: Markdown Examples
-      link: /markdown-examples
     - theme: alt
-      text: API Examples
-      link: /api-examples
-
-features:
-  - title: Feature A
-    details: Lorem ipsum dolor sit amet, consectetur adipiscing elit
-  - title: Feature B
-    details: Lorem ipsum dolor sit amet, consectetur adipiscing elit
-  - title: Feature C
-    details: Lorem ipsum dolor sit amet, consectetur adipiscing elit
+      text: View on GitHub
+      link: https://github.com/dethdkn/ldap-nel
 ---

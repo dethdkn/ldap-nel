@@ -1,8 +1,8 @@
 import { defineConfig } from 'vitepress'
 
 export default defineConfig({
-  title: "ldap-nel-docs",
-  description: "description",
+  title: 'ldap-nel-docs',
+  description: 'description',
   themeConfig: {
     nav: [
       { text: 'Home', link: '/' },
@@ -13,13 +13,13 @@ export default defineConfig({
         text: 'Examples',
         items: [
           { text: 'Markdown Examples', link: '/markdown-examples' },
-          { text: 'Runtime API Examples', link: '/api-examples' }
-        ]
-      }
+          { text: 'Runtime API Examples', link: '/api-examples' },
+        ],
+      },
     ],
 
     socialLinks: [
-      { icon: 'github', link: 'https://github.com/vuejs/vitepress' }
-    ]
-  }
+      { icon: 'github', link: 'https://github.com/vuejs/vitepress' },
+    ],
+  },
 })

@@ -7,8 +7,8 @@
 dist
 
 # Vitepress dev/build outputs
-.vitepress/cache
-.vitepress/dist
+docs/.vitepress/cache
+docs/.vitepress/dist
 
 # Node dependencies
 node_modules
