@@ -13,7 +13,7 @@ func createLdap(c *gin.Context) {
 	}
 
 	if err := ldap.Save(); err != nil {
-		c.JSON(500, gin.H{"message": "Failed to save LDAP configuration"})
+		c.JSON(500, gin.H{"message": err})
 		return
 	}
 

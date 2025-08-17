@@ -4,6 +4,7 @@ import (
 	"errors"
 
 	"github.com/dethdkn/ldap-nel/backend/db"
+	"github.com/dethdkn/ldap-nel/backend/ldap"
 	"github.com/dethdkn/ldap-nel/backend/utils"
 )
 
@@ -19,6 +20,11 @@ type Ldap struct {
 }
 
 func (l *Ldap) Save() error {
+	err := ldap.TestLdap(l.URL, l.Port, l.SSL, l.BaseDN, l.BindDN, l.BindPass)
+	if err != nil {
+		return err
+	}
+
 	stmt, err := db.SQL.Prepare(`INSERT INTO ldaps (name, url, port, ssl, base_dn, bind_dn, bind_pass) VALUES (?, ?, ?, ?, ?, ?, ?)`)
 	if err != nil {
 		return err
@@ -71,6 +77,16 @@ func (l *Ldap) Update() error {
 	}
 
 	l.BindPass, err = utils.Encrypt(l.BindPass)
+	if err != nil {
+		return err
+	}
+
+	decryptedPass, err := utils.Decrypt(l.BindPass)
+	if err != nil {
+		return err
+	}
+
+	err = ldap.TestLdap(l.URL, l.Port, l.SSL, l.BaseDN, l.BindDN, decryptedPass)
 	if err != nil {
 		return err
 	}
