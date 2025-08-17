@@ -1,7 +1,7 @@
-export default async () => {
-  const { data: avaiableLdaps, refresh } = await useFetch<string[]>('/server/saved-ldaps')
+export default createGlobalState(async () => {
+  const { data: avaiableLdaps, refresh } = await useFetch<{ id: number, name: string }[]>('/server/saved-ldaps')
 
-  const selectedLdap = ref<string>()
+  const selectedLdap = ref<number>()
 
   async function refreshLdaps(){
     await refresh()
@@ -9,4 +9,4 @@ export default async () => {
   }
 
   return { avaiableLdaps, refreshLdaps, selectedLdap }
-}
+})

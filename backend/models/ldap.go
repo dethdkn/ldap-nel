@@ -19,6 +19,11 @@ type Ldap struct {
 	BindPass string `json:"bind_pass"`
 }
 
+type LdapName struct {
+	ID   int64  `json:"id"`
+	Name string `json:"name"`
+}
+
 func (l *Ldap) Save() error {
 	err := ldap.TestLdap(l.URL, l.Port, l.SSL, l.BaseDN, l.BindDN, l.BindPass)
 	if err != nil {
@@ -149,23 +154,23 @@ func GetAllLdaps() ([]*Ldap, error) {
 	return ldaps, nil
 }
 
-func GetAllLdapsNames() ([]string, error) {
-	row, err := db.SQL.Query(`SELECT name FROM ldaps`)
+func GetAllLdapsNames() ([]LdapName, error) {
+	row, err := db.SQL.Query(`SELECT id, name FROM ldaps`)
 	if err != nil {
 		return nil, err
 	}
 	defer row.Close()
 
-	var names []string
+	var ldaps []LdapName
 	for row.Next() {
-		var name string
-		if err := row.Scan(&name); err != nil {
+		var l LdapName
+		if err := row.Scan(&l.ID, &l.Name); err != nil {
 			return nil, err
 		}
-		names = append(names, name)
+		ldaps = append(ldaps, l)
 	}
 	if err := row.Err(); err != nil {
 		return nil, err
 	}
-	return names, nil
+	return ldaps, nil
 }

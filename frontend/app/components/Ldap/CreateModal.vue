@@ -41,7 +41,7 @@ whenever(() => !model.value, () => state.value = { id: 0, name: '', url: '', por
           <UInput v-model="state.url" icon="i-lucide-link" size="lg" placeholder="example.com" class="w-full" />
         </UFormField>
         <UFormField label="Port" name="port">
-          <UInputNumber v-model="state.port" icon="i-lucide-ethernet-port" orientation="vertical" size="lg" placeholder="389" class="w-full" />
+          <UInputNumber v-model="state.port" orientation="vertical" size="lg" placeholder="389" class="w-full" />
         </UFormField>
         <UFormField name="ssl">
           <UCheckbox v-model="state.ssl" label="SSL" name="ssl" variant="card" class="w-full" />
