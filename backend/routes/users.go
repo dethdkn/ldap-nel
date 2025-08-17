@@ -142,7 +142,7 @@ func deleteUser(c *gin.Context) {
 func getUser(c *gin.Context) {
 	var req reqID
 	if err := c.ShouldBindJSON(&req); err != nil {
-		c.JSON(400, gin.H{"message": "Invalid request body"})
+		c.JSON(400, gin.H{"message": "Could not bind JSON"})
 		return
 	}
 

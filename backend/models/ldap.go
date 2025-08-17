@@ -169,3 +169,21 @@ func GetAllLdapsNames() ([]LdapName, error) {
 	}
 	return ldaps, nil
 }
+
+func GetLdapChilds(id int64, dn string) (string, []string, error) {
+	l, err := GetLdapByID(id, true)
+	if err != nil {
+		return "", nil, err
+	}
+
+	if dn == "" {
+		dn = l.BaseDN
+	}
+
+	childDNs, err := ldap.SearchChilds(l.URL, l.Port, l.SSL, dn, l.BindDN, l.BindPass)
+	if err != nil {
+		return "", nil, err
+	}
+
+	return dn, childDNs, nil
+}

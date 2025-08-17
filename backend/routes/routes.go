@@ -16,6 +16,8 @@ func RegisterRoutes(server *gin.Engine) {
 	authenticated.GET("/saved-ldaps", getLdapsNames)
 	authenticated.PUT("/password", updatePassword)
 
+	authenticated.POST("/ldap-childs", getChilds)
+
 	authenticatedAdmin := authenticated.Group("/", authenticateAdmin)
 	authenticatedAdmin.GET("/user", getUser)
 	authenticatedAdmin.GET("/users", getUsers)

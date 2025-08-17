@@ -5,6 +5,11 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+type reqLdap struct {
+	ID int64  `json:"id" binding:"required"`
+	DN string `json:"dn"`
+}
+
 func createLdap(c *gin.Context) {
 	var ldap models.Ldap
 	if err := c.ShouldBindJSON(&ldap); err != nil {
@@ -53,7 +58,7 @@ func deleteLdap(c *gin.Context) {
 func getLdap(c *gin.Context) {
 	var req reqID
 	if err := c.ShouldBindJSON(&req); err != nil {
-		c.JSON(400, gin.H{"message": "Invalid request body"})
+		c.JSON(400, gin.H{"message": "Could not bind JSON"})
 		return
 	}
 
@@ -83,4 +88,20 @@ func getLdapsNames(c *gin.Context) {
 		return
 	}
 	c.JSON(200, ldaps)
+}
+
+func getChilds(c *gin.Context) {
+	var req reqLdap
+	if err := c.ShouldBindJSON(&req); err != nil {
+		c.JSON(400, gin.H{"message": "Could not bind JSON"})
+		return
+	}
+
+	dn, children, err := models.GetLdapChilds(req.ID, req.DN)
+	if err != nil {
+		c.JSON(500, gin.H{"message": "Failed to retrieve child entries"})
+		return
+	}
+
+	c.JSON(200, gin.H{"dn": dn, "childs": children})
 }
