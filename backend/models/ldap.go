@@ -81,11 +81,6 @@ func (l *Ldap) Update() error {
 		l.BindPass = existingBindPassword
 	}
 
-	l.BindPass, err = utils.Encrypt(l.BindPass)
-	if err != nil {
-		return err
-	}
-
 	decryptedPass, err := utils.Decrypt(l.BindPass)
 	if err != nil {
 		return err
