@@ -29,6 +29,5 @@ VOLUME ["/database"]
 COPY --from=go-builder /server/server /server/server
 
 EXPOSE 3000
-EXPOSE 8080
 
 CMD ["sh", "-c", "/server/server & node /app/.output/server/index.mjs; wait"]
