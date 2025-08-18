@@ -16,7 +16,7 @@ const settingsModal = useSettingsModal()
       </h1>
       <p>Please choose a connection from the navigation bar above.</p>
     </div>
-    <div v-else-if="avaiableLdaps?.length === 0" class="min-h-content flex flex-col items-center justify-center space-y-1">
+    <div v-else class="min-h-content flex flex-col items-center justify-center space-y-1">
       <NuxtImg src="/nel.png" alt="Ldap Nel" class="w-32" />
       <h1 class="my-4 text-xl font-bold">
         Welcome to Ldap Nel!
@@ -29,9 +29,6 @@ const settingsModal = useSettingsModal()
       <p v-else>
         Please contact an administrator to create one.
       </p>
-    </div>
-    <div v-else class="min-h-content flex flex-col items-center justify-center space-y-1">
-      <UIcon name="i-lucide-loader" class="animate-spin" />
     </div>
   </div>
 </template>
