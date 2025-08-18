@@ -14,7 +14,7 @@ export default () => {
   return computed(() => {
     const menu: DropdownMenuItem[][] = [
       [{ label: user.value.username || '???', icon: 'i-lucide-user', disabled: true }],
-      [{ icon: 'i-lucide-key', label: 'Update Password', onSelect: () => passwordModal.value = true }],
+      [{ icon: 'i-lucide-key-round', label: 'Update Password', onSelect: () => passwordModal.value = true }],
     ]
 
     const baseMenu = [

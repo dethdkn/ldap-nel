@@ -53,7 +53,7 @@ async function login(){
               <UInput v-model="state.username" icon="i-lucide-user" size="lg" class="w-full" />
             </UFormField>
             <UFormField label="Password" name="password">
-              <UInput v-model="state.password" icon="i-lucide-key" size="lg" type="password" class="w-full" />
+              <UInput v-model="state.password" icon="i-lucide-key-round" size="lg" type="password" class="w-full" />
             </UFormField>
             <UButton label="Login" icon="i-lucide-log-in" color="success" variant="solid" block type="submit" :loading="isLoading" />
           </UForm>
