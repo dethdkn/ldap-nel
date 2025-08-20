@@ -31,11 +31,11 @@ watch(selected, refreshAttributes)
 </script>
 
 <template>
-  <div class="space-between h-ldap max-h-ldap flex w-full justify-between space-x-4 overflow-x-scroll">
-    <div class="max-h-ldap min-w-64 overflow-scroll">
+  <div class="space-between h-ldap max-h-ldap flex w-full justify-between space-x-4 overflow-x-auto">
+    <div class="max-h-ldap min-w-64 overflow-auto">
       <UTree v-model="selected" v-model:expanded="expanded" :items />
     </div>
-    <div class="max-h-ldap w-full min-w-92 overflow-scroll">
+    <div class="max-h-ldap w-full min-w-92 overflow-auto">
       <table class="w-full text-left text-sm text-gray-500 dark:text-gray-400">
         <thead class="bg-gray-200 text-xs text-gray-700 uppercase dark:bg-gray-700 dark:text-gray-400">
           <tr>
