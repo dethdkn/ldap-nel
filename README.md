@@ -1,5 +1,5 @@
 <p align="center">
-   <img src="https://github.com/dethdkn/ldap-nel/blob/main/frontend/public/nel.png?raw=true" alt="Ldap-Nel" width="100px"/>
+   <img src="https://github.com/dethdkn/ldap-nel/blob/main/public/nel.png?raw=true" alt="Ldap-Nel" width="100px"/>
 <h1 align="center">Ldap-Nel</h1>
 </p>
 <p align="center">🔐 Modern web interface for LDAP administration</p>

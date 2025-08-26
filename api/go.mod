@@ -1,4 +1,4 @@
-module github.com/dethdkn/ldap-nel/backend
+module github.com/dethdkn/ldap-nel/api
 
 go 1.25.0
 

@@ -7,7 +7,6 @@ export default defineConfig({
     nav: [
       { text: 'Home', link: '/' },
     ],
-
     sidebar: [
       {
         text: 'Examples',
@@ -17,9 +16,11 @@ export default defineConfig({
         ],
       },
     ],
-
     socialLinks: [
       { icon: 'github', link: 'https://github.com/vuejs/vitepress' },
     ],
+  },
+  vite: {
+    publicDir: '../public',
   },
 })

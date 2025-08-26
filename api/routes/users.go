@@ -1,8 +1,8 @@
 package routes
 
 import (
-	"github.com/dethdkn/ldap-nel/backend/models"
-	"github.com/dethdkn/ldap-nel/backend/utils"
+	"github.com/dethdkn/ldap-nel/api/models"
+	"github.com/dethdkn/ldap-nel/api/utils"
 	"github.com/gin-gonic/gin"
 )
 

@@ -1,14 +1,12 @@
-# Nuxt dev/build outputs
+# Nuxt/Go dev/build outputs
 .output
 .data
 .nuxt
 .nitro
 .cache
+cache
+tmp
 dist
-
-# Vitepress dev/build outputs
-docs/.vitepress/cache
-docs/.vitepress/dist
 
 # Node dependencies
 node_modules

@@ -3,8 +3,8 @@ package models
 import (
 	"errors"
 
-	"github.com/dethdkn/ldap-nel/backend/db"
-	"github.com/dethdkn/ldap-nel/backend/passwords"
+	"github.com/dethdkn/ldap-nel/api/db"
+	"github.com/dethdkn/ldap-nel/api/passwords"
 )
 
 type User struct {

@@ -3,9 +3,9 @@ package models
 import (
 	"errors"
 
-	"github.com/dethdkn/ldap-nel/backend/db"
-	"github.com/dethdkn/ldap-nel/backend/ldap"
-	"github.com/dethdkn/ldap-nel/backend/utils"
+	"github.com/dethdkn/ldap-nel/api/db"
+	"github.com/dethdkn/ldap-nel/api/ldap"
+	"github.com/dethdkn/ldap-nel/api/utils"
 )
 
 type Ldap struct {
