@@ -41,13 +41,17 @@ async function refreshAll(){
 }
 
 const options = ref<DropdownMenuItem[][]>([[
+  { icon: 'i-lucide-search', label: 'Search', kbds: ['meta', 'k'] },
   { icon: 'i-lucide-rotate-ccw', label: 'Refresh', onSelect: refreshAll },
+  { icon: 'i-lucide-folder-plus', label: 'Add DN', disabled: !user.value.admin },
   { icon: 'i-lucide-circle-plus', label: 'Add attribute', disabled: !user.value.admin },
 ]])
 </script>
 
 <template>
-  <div class="mb-4 flex w-full items-center justify-end">
+  <div class="mb-4 flex w-full items-center justify-between">
+    <div />
+    <span>{{ selected?.fullDn?.split(',')?.join(', ') || '-' }}</span>
     <UDropdownMenu :items="options" size="sm">
       <UIcon name="i-lucide-ellipsis-vertical" class="cursor-pointer transition-all duration-300 hover:text-gray-400 hover:dark:text-gray-600" />
     </UDropdownMenu>
