@@ -4,7 +4,7 @@ export default defineNuxtPlugin(() => {
   const toast = useToast()
   const { copy } = useClipboard()
   const { user } = useUserSession()
-  const { openDeleteModal, updateModal } = useCrudModal()
+  const { openDeleteModal, openUpdateModal } = useCrudModal()
 
   const clipboard = async (v: string, m: string) => {
     await copy(v)
@@ -13,7 +13,7 @@ export default defineNuxtPlugin(() => {
 
   const buildContextMenu = (ldap: number, dn: string, attr: string, val: string): ContextMenuItem[][] => [
     [
-      { icon: 'i-lucide-pen-line', label: 'Edit value', disabled: !user.value.admin, onSelect: () => updateModal.value = true },
+      { icon: 'i-lucide-pen-line', label: 'Edit value', disabled: !user.value.admin, onSelect: () => openUpdateModal(ldap, dn, attr, val) },
       { icon: 'i-lucide-trash', label: 'Delete value', disabled: !user.value.admin, onSelect: () => openDeleteModal(ldap, dn, attr, val) },
     ],
     [

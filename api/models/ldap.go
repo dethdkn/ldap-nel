@@ -206,6 +206,24 @@ func GetLdapAttributes(id int64, dn string) (map[string][]string, error) {
 	return attrs, nil
 }
 
+func UpdateLdapAttributeValue(id int64, dn, attribute, value, newValue string) error {
+	l, err := GetLdapByID(id, true)
+	if err != nil {
+		return err
+	}
+
+	if dn == "" || attribute == "" || value == "" || newValue == "" {
+		return errors.New("dn, attribute, value, and newValue are required")
+	}
+
+	err = ldap.UpdateAttributeValue(l.URL, l.Port, l.SSL, l.BindDN, l.BindPass, dn, attribute, value, newValue)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
 func DeleteLdapAttributeValue(id int64, dn, attribute, value string) error {
 	l, err := GetLdapByID(id, true)
 	if err != nil {

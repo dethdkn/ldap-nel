@@ -80,7 +80,7 @@ docker compose up -d --force-recreate
 - [ ] Add option to create a **new Attribute**
 
 ### Update
-- [ ] Implement **attribute update** functionality
+- [x] Implement **attribute update** functionality
 - [ ] Support common **LDAP password encryption** options when updating passwords
 - [ ] Add **copy** option
 - [ ] Add **move** option

@@ -106,5 +106,6 @@ const options = ref<DropdownMenuItem[][]>([[
       </table>
     </div>
   </div>
+  <AttributeUpdateModal v-if="user.admin" @refresh="refreshAttributes" />
   <AttributeDeleteModal v-if="user.admin" @refresh="refreshAttributes" />
 </template>

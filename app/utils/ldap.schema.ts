@@ -21,3 +21,10 @@ export const attributeValueSchema = z.object({
 })
 
 export type AttributeValue = z.infer<typeof attributeValueSchema>
+
+export const attributeNewValueSchema = attributeValueSchema.extend({
+  newValue: z.string().min(1, 'New Value is required'),
+})
+  .refine(data => data.value !== data.newValue, { message: 'New Value must be different from old value', path: ['newValue'] })
+
+export type AttributeNewValue = z.infer<typeof attributeNewValueSchema>
