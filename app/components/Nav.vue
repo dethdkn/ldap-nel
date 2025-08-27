@@ -14,10 +14,10 @@ const { avaiableLdaps, selectedLdap } = await useLdapConnection()
       </div>
       <div class="flex items-center space-x-2 sm:mt-0">
         <USelect v-model="selectedLdap" :items="avaiableLdaps" size="sm" value-key="id" label-key="name" placeholder="Ldap..." class="w-24" />
-        <UDropdownMenu :items="themeMenu">
+        <UDropdownMenu :items="themeMenu" size="sm">
           <UButton icon="i-lucide-swatch-book" size="sm" color="neutral" square variant="ghost" />
         </UDropdownMenu>
-        <UDropdownMenu :items="userMenu">
+        <UDropdownMenu :items="userMenu" size="sm">
           <div class="cursor-pointer">
             <UAvatar :alt="user.username || '?'" size="xs" />
           </div>
