@@ -1,6 +1,7 @@
 <script setup lang='ts'>
-import type { TreeItem } from '@nuxt/ui'
+import type { DropdownMenuItem, TreeItem } from '@nuxt/ui'
 
+const { start, finish } = useLoadingIndicator()
 const { selectedLdap } = await useLdapConnection()
 
 const items = ref<TreeItem[]>([])
@@ -14,23 +15,42 @@ function onSelect(e: any){
 }
 
 async function refreshTree(){
+  start()
   const { dn, childs } = await $fetch<{ childs: string[], dn: string }>('/server/ldap-childs', { method: 'post', body: { id: selectedLdap.value } })
 
   items.value = buildLdapTree(dn, childs, onSelect)
 
   expanded.value = [dn]
+  finish()
 }
 
 async function refreshAttributes(){
+  start()
   const res = await $fetch<{ attributes: Record<string, string[]> }>('/server/ldap-attributes', { method: 'post', body: { id: selectedLdap.value, dn: selected.value?.fullDn } })
   attributes.value = res.attributes
+  finish()
 }
 
 watch(selectedLdap, refreshTree, { immediate: true })
 watch(selected, refreshAttributes)
+
+async function refreshAll(){
+  await refreshTree()
+  await refreshAttributes()
+}
+
+const options = ref<DropdownMenuItem[][]>([[
+  { icon: 'i-lucide-rotate-ccw', label: 'Refresh', onSelect: refreshAll },
+  { icon: 'i-lucide-circle-plus', label: 'Add attribute' },
+]])
 </script>
 
 <template>
+  <div class="mb-4 flex w-full items-center justify-end">
+    <UDropdownMenu :items="options" size="sm">
+      <UIcon name="i-lucide-ellipsis-vertical" class="cursor-pointer transition-all duration-300 hover:text-gray-400 hover:dark:text-gray-600" />
+    </UDropdownMenu>
+  </div>
   <div class="space-between h-ldap max-h-ldap flex w-full justify-between space-x-4 overflow-x-auto">
     <div class="max-h-ldap min-w-64 overflow-auto">
       <UTree v-model="selected" v-model:expanded="expanded" :items />

@@ -6,7 +6,7 @@ const settingsModal = useSettingsModal()
 
 <template>
   <div>
-    <div v-if="selectedLdap" class="mx-auto mt-4 flex max-w-7xl items-center justify-center px-2 md:px-4">
+    <div v-if="selectedLdap" class="mx-auto mt-4 flex max-w-7xl flex-col items-center justify-center px-2 md:px-4">
       <Ldap />
     </div>
     <div v-else-if="(avaiableLdaps?.length || 0) > 0" class="min-h-content flex flex-col items-center justify-center space-y-1">
