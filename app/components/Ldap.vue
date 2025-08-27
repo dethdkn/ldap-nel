@@ -75,17 +75,17 @@ const options = ref<DropdownMenuItem[][]>([[
           <template v-for="(attrK, key) in Object.keys(attributes)" :key="`${attrK}-${key}`">
             <UPopover v-for="(val, k) in attributes[attrK]" :key="`${val}-${k}`" :mode="attrK === 'jpegPhoto' ? 'hover' : 'click'" :content="{side: 'top'}">
               <tr class="bg-gray-50 hover:bg-gray-300 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-600">
-                <UContextMenu :items="$buildContextMenu(attrK, val)">
+                <UContextMenu :items="$buildContextMenu(attrK, val)" size="sm">
                   <td class="px-6 py-4">
                     {{ attrK }}
                   </td>
                 </UContextMenu>
-                <UContextMenu :items="$buildContextMenu(attrK, val)">
+                <UContextMenu :items="$buildContextMenu(attrK, val)" size="sm">
                   <td class="max-w-20 truncate px-6 py-4">
                     {{ val }}
                   </td>
                 </UContextMenu>
-                <UContextMenu :items="$buildContextMenu(attrK, val)">
+                <UContextMenu :items="$buildContextMenu(attrK, val)" size="sm">
                   <td class="px-6 py-4 text-end">
                     {{ val.length }}
                   </td>
@@ -94,7 +94,7 @@ const options = ref<DropdownMenuItem[][]>([[
 
               <template #content>
                 <img v-if="attrK === 'jpegPhoto'" :src="`data:image/jpeg;base64,${val}`" :alt="attrK" class="max-w-32 rounded-md">
-                <div v-else class=" max-w-64 min-w-36 rounded-md px-4 py-6 text-center break-words">
+                <div v-else class=" max-w-64 min-w-20 rounded-md px-4 py-6 text-center text-sm break-words">
                   <p>
                     {{ val }}
                   </p>
