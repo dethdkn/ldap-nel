@@ -1,6 +1,7 @@
 <script setup lang='ts'>
 import type { DropdownMenuItem, TreeItem } from '@nuxt/ui'
 
+const { user } = useUserSession()
 const { start, finish } = useLoadingIndicator()
 const { selectedLdap } = await useLdapConnection()
 
@@ -41,7 +42,7 @@ async function refreshAll(){
 
 const options = ref<DropdownMenuItem[][]>([[
   { icon: 'i-lucide-rotate-ccw', label: 'Refresh', onSelect: refreshAll },
-  { icon: 'i-lucide-circle-plus', label: 'Add attribute' },
+  { icon: 'i-lucide-circle-plus', label: 'Add attribute', disabled: !user.value.admin },
 ]])
 </script>
 
