@@ -18,7 +18,9 @@
     "url": "git+https://github.com/dethdkn/ldap-nel.git"
   },
   "bugs": "https://github.com/dethdkn/ldap-nel/issues",
-  "keywords": ["ldap"],
+  "keywords": [
+    "ldap"
+  ],
   "scripts": {
     "postinstall": "nuxt prepare",
     "dev": "nuxt dev",
@@ -42,7 +44,7 @@
     "nuxt-security": "^2.4.0",
     "vue": "^3.5.20",
     "vue-router": "^4.5.1",
-    "zod": "^4.1.3"
+    "zod": "^4.1.4"
   },
   "devDependencies": {
     "@dethdkn/eslint-config": "beta",

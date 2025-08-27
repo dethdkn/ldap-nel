@@ -86,7 +86,7 @@ docker compose up -d --force-recreate
 - [ ] Add **move** option
 
 ### Delete
-- [ ] Implement **attribute deletion**
+- [x] Implement **attribute deletion**
 - [ ] Add option to delete a **DN**
 - [ ] Add **smart delete** (context-aware cleanup)
 

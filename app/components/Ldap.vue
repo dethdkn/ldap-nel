@@ -75,17 +75,17 @@ const options = ref<DropdownMenuItem[][]>([[
           <template v-for="(attrK, key) in Object.keys(attributes)" :key="`${attrK}-${key}`">
             <UPopover v-for="(val, k) in attributes[attrK]" :key="`${val}-${k}`" :mode="attrK === 'jpegPhoto' ? 'hover' : 'click'" :content="{side: 'top'}">
               <tr class="bg-gray-50 hover:bg-gray-300 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-600">
-                <UContextMenu :items="$buildContextMenu(attrK, val)" size="sm">
+                <UContextMenu :items="$buildContextMenu(selectedLdap || 0, selected.fullDn, attrK, val)" size="sm">
                   <td class="px-6 py-4">
                     {{ attrK }}
                   </td>
                 </UContextMenu>
-                <UContextMenu :items="$buildContextMenu(attrK, val)" size="sm">
+                <UContextMenu :items="$buildContextMenu(selectedLdap || 0, selected.fullDn, attrK, val)" size="sm">
                   <td class="max-w-20 truncate px-6 py-4">
                     {{ val }}
                   </td>
                 </UContextMenu>
-                <UContextMenu :items="$buildContextMenu(attrK, val)" size="sm">
+                <UContextMenu :items="$buildContextMenu(selectedLdap || 0, selected.fullDn, attrK, val)" size="sm">
                   <td class="px-6 py-4 text-end">
                     {{ val.length }}
                   </td>
@@ -106,4 +106,5 @@ const options = ref<DropdownMenuItem[][]>([[
       </table>
     </div>
   </div>
+  <AttributeDeleteModal v-if="user.admin" @refresh="refreshAttributes" />
 </template>

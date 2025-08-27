@@ -205,3 +205,21 @@ func GetLdapAttributes(id int64, dn string) (map[string][]string, error) {
 
 	return attrs, nil
 }
+
+func DeleteLdapAttributeValue(id int64, dn, attribute, value string) error {
+	l, err := GetLdapByID(id, true)
+	if err != nil {
+		return err
+	}
+
+	if dn == "" || attribute == "" || value == "" {
+		return errors.New("dn, attribute, and value are required")
+	}
+
+	err = ldap.DeleteAttributeValue(l.URL, l.Port, l.SSL, l.BindDN, l.BindPass, dn, attribute, value)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}

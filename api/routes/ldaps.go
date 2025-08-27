@@ -121,3 +121,24 @@ func getAttributes(c *gin.Context) {
 
 	c.JSON(200, gin.H{"attributes": attributes})
 }
+
+func deleteAttributeValue(c *gin.Context) {
+	var req struct {
+		ID        int64  `json:"id" binding:"required"`
+		DN        string `json:"dn" binding:"required"`
+		Attribute string `json:"attribute" binding:"required"`
+		Value     string `json:"value" binding:"required"`
+	}
+
+	if err := c.ShouldBindJSON(&req); err != nil {
+		c.JSON(400, gin.H{"message": "Could not bind JSON"})
+		return
+	}
+
+	if err := models.DeleteLdapAttributeValue(req.ID, req.DN, req.Attribute, req.Value); err != nil {
+		c.JSON(500, gin.H{"message": "Failed to delete attribute value"})
+		return
+	}
+
+	c.JSON(200, gin.H{"message": "Attribute value deleted successfully"})
+}

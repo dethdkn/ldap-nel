@@ -11,7 +11,7 @@ var binaryAttrs = map[string]bool{
 	"jpegPhoto": true,
 }
 
-func SearchChilds(url string, port int64, ssl bool, DN, bindDN, bindPass string) ([]string, error) {
+func SearchChilds(url string, port int64, ssl bool, dn, bindDN, bindPass string) ([]string, error) {
 	l, err := Connect(url, port, ssl)
 	if err != nil {
 		return nil, err
@@ -26,7 +26,7 @@ func SearchChilds(url string, port int64, ssl bool, DN, bindDN, bindPass string)
 	}
 
 	searchReq := ldap.NewSearchRequest(
-		DN,
+		dn,
 		ldap.ScopeChildren, ldap.NeverDerefAliases, 0, 0, false,
 		"(objectClass=*)",
 		[]string{"dn"},
@@ -50,7 +50,7 @@ func SearchChilds(url string, port int64, ssl bool, DN, bindDN, bindPass string)
 	return childDNs, nil
 }
 
-func SearchAttributes(url string, port int64, ssl bool, DN, bindDN, bindPass string) (map[string][]string, error) {
+func SearchAttributes(url string, port int64, ssl bool, dn, bindDN, bindPass string) (map[string][]string, error) {
 	l, err := Connect(url, port, ssl)
 	if err != nil {
 		return nil, err
@@ -65,7 +65,7 @@ func SearchAttributes(url string, port int64, ssl bool, DN, bindDN, bindPass str
 	}
 
 	searchReq := ldap.NewSearchRequest(
-		DN,
+		dn,
 		ldap.ScopeBaseObject, ldap.NeverDerefAliases, 0, 0, false,
 		"(objectClass=*)",
 		nil,

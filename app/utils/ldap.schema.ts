@@ -12,3 +12,12 @@ export const ldapSchema = z.object({
 })
 
 export type Ldap = z.infer<typeof ldapSchema>
+
+export const attributeValueSchema = z.object({
+  id: z.number().default(0),
+  dn: z.string().min(1, 'DN is required').trim(),
+  attribute: z.string().min(1, 'Attribute is required'),
+  value: z.string().min(1, 'Value is required'),
+})
+
+export type AttributeValue = z.infer<typeof attributeValueSchema>
