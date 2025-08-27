@@ -70,10 +70,10 @@ docker compose up -d --force-recreate
 ## 🎯 Todo
 
 ### Search
-- [ ] Add support for **JPEG image**
-- [ ] Enable **hover to preview JPEG image**
+- [x] Add support for **JPEG image**
+- [x] Enable **hover to preview JPEG image**
 - [ ] Add **Search DN** option in the UI
-- [ ] Add **refresh** option
+- [x] Add **refresh** option
 
 ### Add
 - [ ] Add option to create a **new DN**
