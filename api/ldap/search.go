@@ -1,10 +1,15 @@
 package ldap
 
 import (
+	"encoding/base64"
 	"errors"
 
 	"github.com/go-ldap/ldap/v3"
 )
+
+var binaryAttrs = map[string]bool{
+	"jpegPhoto": true,
+}
 
 func SearchChilds(url string, port int64, ssl bool, DN, bindDN, bindPass string) ([]string, error) {
 	l, err := Connect(url, port, ssl)
@@ -78,7 +83,15 @@ func SearchAttributes(url string, port int64, ssl bool, DN, bindDN, bindPass str
 
 	attrs := make(map[string][]string)
 	for _, attr := range result.Entries[0].Attributes {
-		attrs[attr.Name] = attr.Values
+		if binaryAttrs[attr.Name] && len(attr.ByteValues) > 0 {
+			b64Values := make([]string, len(attr.ByteValues))
+			for i, b := range attr.ByteValues {
+				b64Values[i] = base64.StdEncoding.EncodeToString(b)
+			}
+			attrs[attr.Name] = b64Values
+		} else {
+			attrs[attr.Name] = attr.Values
+		}
 	}
 
 	return attrs, nil
