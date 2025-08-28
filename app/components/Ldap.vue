@@ -6,6 +6,9 @@ const { start, finish } = useLoadingIndicator()
 const { selectedLdap } = await useLdapConnection()
 const { openAddModal } = useCrudModal()
 
+const searchModal = ref(false)
+
+const treeWrapper = ref<HTMLElement>()
 const items = ref<TreeItem[]>([])
 const attributes = ref<Record<string, string[]>>({})
 const selected = ref()
@@ -42,11 +45,19 @@ async function refreshAll(){
 }
 
 const options = ref<DropdownMenuItem[][]>([[
-  { icon: 'i-lucide-search', label: 'Search', kbds: ['meta', 'k'] },
+  { icon: 'i-lucide-search', label: 'Search', kbds: ['meta', 'k'], onSelect: () => searchModal.value = true },
   { icon: 'i-lucide-rotate-ccw', label: 'Refresh', onSelect: refreshAll },
   { icon: 'i-lucide-folder-plus', label: 'Add DN', disabled: !user.value.admin },
   { icon: 'i-lucide-circle-plus', label: 'Add attribute', disabled: !user.value.admin, onSelect: () => openAddModal(selectedLdap.value || 0, selected.value?.fullDn || '') },
 ]])
+
+defineShortcuts({
+  meta_k: () => searchModal.value = !searchModal.value,
+})
+
+function search(fullDn: string){
+  handleSearch(treeWrapper, items.value[0]?.label || '', fullDn)
+}
 </script>
 
 <template>
@@ -58,7 +69,7 @@ const options = ref<DropdownMenuItem[][]>([[
     </UDropdownMenu>
   </div>
   <div class="space-between h-ldap max-h-ldap flex w-full justify-between space-x-4 overflow-x-auto">
-    <div class="max-h-ldap min-w-64 overflow-auto">
+    <div ref="treeWrapper" class="max-h-ldap min-w-64 overflow-auto">
       <UTree v-model="selected" v-model:expanded="expanded" :items />
     </div>
     <div class="max-h-ldap w-full min-w-92 overflow-auto">
@@ -111,6 +122,7 @@ const options = ref<DropdownMenuItem[][]>([[
       </table>
     </div>
   </div>
+  <SearchModal v-model="searchModal" :items @searched="search" />
   <AttributeAddModal v-if="user.admin" @refresh="refreshAttributes" />
   <AttributeUpdateModal v-if="user.admin" @refresh="refreshAttributes" />
   <AttributeDeleteModal v-if="user.admin" @refresh="refreshAttributes" />
