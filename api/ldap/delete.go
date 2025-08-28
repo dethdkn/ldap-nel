@@ -24,7 +24,7 @@ func DeleteAttributeValue(url string, port int64, ssl bool, bindDN, bindPass, dn
 	modifyReq.Delete(attribute, []string{value})
 
 	if err = l.Modify(modifyReq); err != nil {
-		return errors.New("failed to delete attribute value")
+		return err
 	}
 
 	return nil

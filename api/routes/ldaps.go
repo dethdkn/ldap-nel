@@ -55,7 +55,7 @@ func deleteLdap(c *gin.Context) {
 	}
 
 	if err := ldap.Delete(); err != nil {
-		c.JSON(500, gin.H{"message": "Failed to delete LDAP configuration"})
+		c.JSON(500, gin.H{"message": err.Error()})
 		return
 	}
 
@@ -106,7 +106,7 @@ func getChilds(c *gin.Context) {
 
 	dn, children, err := models.GetLdapChilds(req.ID, req.DN)
 	if err != nil {
-		c.JSON(500, gin.H{"message": "Failed to retrieve child entries"})
+		c.JSON(500, gin.H{"message": err.Error()})
 		return
 	}
 
@@ -122,7 +122,7 @@ func getAttributes(c *gin.Context) {
 
 	attributes, err := models.GetLdapAttributes(req.ID, req.DN)
 	if err != nil {
-		c.JSON(500, gin.H{"message": "Failed to retrieve attributes"})
+		c.JSON(500, gin.H{"message": err.Error()})
 		return
 	}
 
@@ -138,7 +138,7 @@ func getPossibleAttributes(c *gin.Context) {
 
 	attributes, err := models.GetLdapPossibleAttributes(req.ID, req.DN)
 	if err != nil {
-		c.JSON(500, gin.H{"message": "Failed to retrieve possible attributes"})
+		c.JSON(500, gin.H{"message": err.Error()})
 		return
 	}
 
@@ -154,7 +154,7 @@ func addAttributeValue(c *gin.Context) {
 	}
 
 	if err := models.AddLdapAttributeValue(req.ID, req.DN, req.Attribute, req.Value); err != nil {
-		c.JSON(500, gin.H{"message": "Failed to add attribute value"})
+		c.JSON(500, gin.H{"message": err.Error()})
 		return
 	}
 
@@ -176,7 +176,7 @@ func updateAttributeValue(c *gin.Context) {
 	}
 
 	if err := models.UpdateLdapAttributeValue(req.ID, req.DN, req.Attribute, req.Value, req.NewValue); err != nil {
-		c.JSON(500, gin.H{"message": "Failed to update attribute value"})
+		c.JSON(500, gin.H{"message": err.Error()})
 		return
 	}
 
@@ -192,7 +192,7 @@ func deleteAttributeValue(c *gin.Context) {
 	}
 
 	if err := models.DeleteLdapAttributeValue(req.ID, req.DN, req.Attribute, req.Value); err != nil {
-		c.JSON(500, gin.H{"message": "Failed to delete attribute value"})
+		c.JSON(500, gin.H{"message": err.Error()})
 		return
 	}
 

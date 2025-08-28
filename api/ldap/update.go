@@ -24,7 +24,7 @@ func AddAttributeValue(url string, port int64, ssl bool, bindDN, bindPass, dn, a
 	modifyReq.Add(attribute, []string{value})
 
 	if err = l.Modify(modifyReq); err != nil {
-		return errors.New("failed to add attribute value")
+		return err
 	}
 
 	return nil
@@ -49,7 +49,7 @@ func UpdateAttributeValue(url string, port int64, ssl bool, bindDN, bindPass, dn
 	modifyReq.Add(attribute, []string{newValue})
 
 	if err = l.Modify(modifyReq); err != nil {
-		return errors.New("failed to update attribute value")
+		return err
 	}
 
 	return nil
