@@ -25,6 +25,7 @@ function getLdapIcon(dn: string){
 export function buildLdapTree(baseDn: string, dns: string[], onSelect: (e: any)=> void): TreeItem[]{
   const root = {
     label: baseDn,
+    fullDn: baseDn.toLowerCase(),
     icon: 'i-lucide-house',
     onSelect,
     children: [] as TreeItem[],
