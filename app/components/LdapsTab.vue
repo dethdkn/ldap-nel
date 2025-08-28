@@ -33,7 +33,8 @@ async function globalRefresh(){
 const columns: TableColumn<Ldap>[] = [
   { accessorKey: 'id', header: 'ID', cell: ({ row }) => h(UBadge, { variant: 'subtle', color: 'neutral' }, () => row.getValue('id')) },
   { accessorKey: 'name', header: 'Name', cell: ({ row }) => h(UBadge, { variant: 'subtle', color: 'primary' }, () => row.getValue('name')) },
-  { accessorKey: 'port', header: 'Port', cell: ({ row }) => h(UBadge, { variant: 'subtle', color: 'secondary' }, () => row.getValue('port')) },
+  { accessorKey: 'url', header: 'Url', cell: ({ row }) => h(UBadge, { variant: 'subtle', color: 'secondary' }, () => row.getValue('url')) },
+  { accessorKey: 'port', header: 'Port', cell: ({ row }) => h(UBadge, { variant: 'subtle', color: 'warning' }, () => row.getValue('port')) },
   { accessorKey: 'ssl', header: 'SSL', cell: ({ row }) => {
     const level = row.getValue('ssl') ? 'Enabled' : 'Disabled'
     const color = row.getValue('ssl') ? 'primary' : 'error'
