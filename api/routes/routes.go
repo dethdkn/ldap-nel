@@ -32,6 +32,9 @@ func RegisterRoutes(server *gin.Engine) {
 	authenticatedAdmin.PUT("/ldap", updateLdap)
 	authenticatedAdmin.DELETE("/ldap", deleteLdap)
 
+	authenticatedAdmin.POST("/possible-attributes", getPossibleAttributes)
+
+	authenticatedAdmin.POST("/attribute-value", addAttributeValue)
 	authenticatedAdmin.PUT("/attribute-value", updateAttributeValue)
 	authenticatedAdmin.DELETE("/attribute-value", deleteAttributeValue)
 }

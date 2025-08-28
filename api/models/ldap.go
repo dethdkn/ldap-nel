@@ -206,6 +206,42 @@ func GetLdapAttributes(id int64, dn string) (map[string][]string, error) {
 	return attrs, nil
 }
 
+func GetLdapPossibleAttributes(id int64, dn string) ([]string, error) {
+	l, err := GetLdapByID(id, true)
+	if err != nil {
+		return nil, err
+	}
+
+	if dn == "" {
+		dn = l.BaseDN
+	}
+
+	attrs, err := ldap.GetPossibleAttributes(l.URL, l.Port, l.SSL, l.BindDN, l.BindPass, dn)
+	if err != nil {
+		return nil, err
+	}
+
+	return attrs, nil
+}
+
+func AddLdapAttributeValue(id int64, dn, attribute, value string) error {
+	l, err := GetLdapByID(id, true)
+	if err != nil {
+		return err
+	}
+
+	if dn == "" || attribute == "" || value == "" {
+		return errors.New("dn, attribute, and value are required")
+	}
+
+	err = ldap.AddAttributeValue(l.URL, l.Port, l.SSL, l.BindDN, l.BindPass, dn, attribute, value)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
 func UpdateLdapAttributeValue(id int64, dn, attribute, value, newValue string) error {
 	l, err := GetLdapByID(id, true)
 	if err != nil {

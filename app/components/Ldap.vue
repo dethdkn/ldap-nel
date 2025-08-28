@@ -4,6 +4,7 @@ import type { DropdownMenuItem, TreeItem } from '@nuxt/ui'
 const { user } = useUserSession()
 const { start, finish } = useLoadingIndicator()
 const { selectedLdap } = await useLdapConnection()
+const { openAddModal } = useCrudModal()
 
 const items = ref<TreeItem[]>([])
 const attributes = ref<Record<string, string[]>>({})
@@ -44,7 +45,7 @@ const options = ref<DropdownMenuItem[][]>([[
   { icon: 'i-lucide-search', label: 'Search', kbds: ['meta', 'k'] },
   { icon: 'i-lucide-rotate-ccw', label: 'Refresh', onSelect: refreshAll },
   { icon: 'i-lucide-folder-plus', label: 'Add DN', disabled: !user.value.admin },
-  { icon: 'i-lucide-circle-plus', label: 'Add attribute', disabled: !user.value.admin },
+  { icon: 'i-lucide-circle-plus', label: 'Add attribute', disabled: !user.value.admin, onSelect: () => openAddModal(selectedLdap.value || 0, selected.value?.fullDn || '') },
 ]])
 </script>
 
@@ -110,6 +111,7 @@ const options = ref<DropdownMenuItem[][]>([[
       </table>
     </div>
   </div>
+  <AttributeAddModal v-if="user.admin" @refresh="refreshAttributes" />
   <AttributeUpdateModal v-if="user.admin" @refresh="refreshAttributes" />
   <AttributeDeleteModal v-if="user.admin" @refresh="refreshAttributes" />
 </template>

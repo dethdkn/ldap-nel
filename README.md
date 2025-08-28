@@ -77,7 +77,7 @@ docker compose up -d --force-recreate
 
 ### Add
 - [ ] Add option to create a **new DN**
-- [ ] Add option to create a **new Attribute**
+- [x] Add option to create a **new Attribute**
 
 ### Update
 - [x] Implement **attribute update** functionality

@@ -10,6 +10,13 @@ type reqLdap struct {
 	DN string `json:"dn"`
 }
 
+type reqLdapAttributeValue struct {
+	ID        int64  `json:"id" binding:"required"`
+	DN        string `json:"dn" binding:"required"`
+	Attribute string `json:"attribute" binding:"required"`
+	Value     string `json:"value" binding:"required"`
+}
+
 func createLdap(c *gin.Context) {
 	var ldap models.Ldap
 	if err := c.ShouldBindJSON(&ldap); err != nil {
@@ -122,6 +129,38 @@ func getAttributes(c *gin.Context) {
 	c.JSON(200, gin.H{"attributes": attributes})
 }
 
+func getPossibleAttributes(c *gin.Context) {
+	var req reqLdap
+	if err := c.ShouldBindJSON(&req); err != nil {
+		c.JSON(400, gin.H{"message": "Could not bind JSON"})
+		return
+	}
+
+	attributes, err := models.GetLdapPossibleAttributes(req.ID, req.DN)
+	if err != nil {
+		c.JSON(500, gin.H{"message": "Failed to retrieve possible attributes"})
+		return
+	}
+
+	c.JSON(200, gin.H{"possibleAttributes": attributes})
+}
+
+func addAttributeValue(c *gin.Context) {
+	var req reqLdapAttributeValue
+
+	if err := c.ShouldBindJSON(&req); err != nil {
+		c.JSON(400, gin.H{"message": "Could not bind JSON"})
+		return
+	}
+
+	if err := models.AddLdapAttributeValue(req.ID, req.DN, req.Attribute, req.Value); err != nil {
+		c.JSON(500, gin.H{"message": "Failed to add attribute value"})
+		return
+	}
+
+	c.JSON(200, gin.H{"message": "Attribute value added successfully"})
+}
+
 func updateAttributeValue(c *gin.Context) {
 	var req struct {
 		ID        int64  `json:"id" binding:"required"`
@@ -145,12 +184,7 @@ func updateAttributeValue(c *gin.Context) {
 }
 
 func deleteAttributeValue(c *gin.Context) {
-	var req struct {
-		ID        int64  `json:"id" binding:"required"`
-		DN        string `json:"dn" binding:"required"`
-		Attribute string `json:"attribute" binding:"required"`
-		Value     string `json:"value" binding:"required"`
-	}
+	var req reqLdapAttributeValue
 
 	if err := c.ShouldBindJSON(&req); err != nil {
 		c.JSON(400, gin.H{"message": "Could not bind JSON"})

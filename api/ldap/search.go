@@ -3,6 +3,9 @@ package ldap
 import (
 	"encoding/base64"
 	"errors"
+	"regexp"
+	"sort"
+	"strings"
 
 	"github.com/go-ldap/ldap/v3"
 )
@@ -95,4 +98,184 @@ func SearchAttributes(url string, port int64, ssl bool, dn, bindDN, bindPass str
 	}
 
 	return attrs, nil
+}
+
+func GetPossibleAttributes(url string, port int64, ssl bool, bindDN, bindPass, dn string) ([]string, error) {
+	l, err := Connect(url, port, ssl)
+	if err != nil {
+		return nil, err
+	}
+
+	defer l.Unbind()
+
+	if bindDN != "" && bindPass != "" {
+		if err = l.Bind(bindDN, bindPass); err != nil {
+			return nil, errors.New("failed to bind with provided credentials")
+		}
+	}
+
+	entryReq := ldap.NewSearchRequest(
+		dn,
+		ldap.ScopeBaseObject, ldap.NeverDerefAliases, 0, 0, false,
+		"(objectClass=*)",
+		[]string{"objectClass", "subschemaSubentry", "+", "*"},
+		nil,
+	)
+	entryRes, err := l.Search(entryReq)
+	if err != nil {
+		return nil, errors.New("failed to read entry")
+	}
+	if len(entryRes.Entries) == 0 {
+		return nil, errors.New("entry not found")
+	}
+	entry := entryRes.Entries[0]
+
+	objClasses := entry.GetAttributeValues("objectClass")
+	for i := range objClasses {
+		objClasses[i] = strings.ToLower(objClasses[i])
+	}
+
+	subschemaDN := entry.GetAttributeValue("subschemaSubentry")
+	if subschemaDN == "" {
+		subschemaDN = "cn=subschema"
+	}
+
+	schemaReq := ldap.NewSearchRequest(
+		subschemaDN,
+		ldap.ScopeBaseObject, ldap.NeverDerefAliases, 0, 0, false,
+		"(objectClass=subschema)",
+		[]string{"objectClasses"},
+		nil,
+	)
+	schemaRes, err := l.Search(schemaReq)
+	if err != nil || len(schemaRes.Entries) == 0 {
+		return nil, errors.New("subschema entry not found or unreadable")
+	}
+	defs := schemaRes.Entries[0].GetAttributeValues("objectClasses")
+
+	type oc struct{ must, may, sup []string }
+	ocMap := map[string]oc{}
+
+	reQuoted := regexp.MustCompile(`'([^']*)'`)
+	nextKW := func(s string, pos int) int {
+		keywords := []string{
+			" NAME ", " DESC ", " OBSOLETE ", " SUP ", " ABSTRACT ",
+			" STRUCTURAL ", " AUXILIARY ", " MUST ", " MAY ", " EQUALITY ",
+			" ORDERING ", " SUBSTR ", " SYNTAX ", " SINGLE-VALUE ",
+			" NO-USER-MODIFICATION ", " USAGE ", " X-",
+			" )",
+		}
+		lower := s
+		min := -1
+		for _, k := range keywords {
+			i := strings.Index(lower[pos:], k)
+			if i >= 0 {
+				i = pos + i
+				if min == -1 || i < min {
+					min = i
+				}
+			}
+		}
+		return min
+	}
+
+	extractSection := func(s, kw string) string {
+		ls := strings.ToUpper(s)
+		kw = " " + strings.ToUpper(kw) + " "
+		i := strings.Index(ls, kw)
+		if i < 0 {
+			kwAlt := " " + strings.ToUpper(kw[:len(kw)-1])
+			i = strings.Index(ls, kwAlt)
+			if i < 0 {
+				return ""
+			}
+			i += len(kwAlt)
+		} else {
+			i += len(kw)
+		}
+		j := nextKW(ls, i)
+		if j < 0 {
+			j = len(s)
+		}
+		return strings.TrimSpace(s[i:j])
+	}
+
+	parseList := func(sec string) []string {
+		if sec == "" {
+			return nil
+		}
+		sec = strings.TrimSpace(sec)
+		if strings.Contains(sec, "'") {
+			ms := reQuoted.FindAllStringSubmatch(sec, -1)
+			out := make([]string, 0, len(ms))
+			for _, m := range ms {
+				if v := strings.TrimSpace(m[1]); v != "" {
+					out = append(out, strings.ToLower(v))
+				}
+			}
+			return out
+		}
+		sec = strings.Trim(sec, "() ")
+		parts := strings.FieldsFunc(sec, func(r rune) bool { return r == '$' || r == ' ' || r == '\n' || r == '\t' })
+		out := make([]string, 0, len(parts))
+		for _, p := range parts {
+			p = strings.TrimSpace(p)
+			if p == "" {
+				continue
+			}
+			out = append(out, strings.ToLower(p))
+		}
+		return out
+	}
+
+	for _, raw := range defs {
+		text := " " + strings.ReplaceAll(strings.ReplaceAll(raw, "\n", " "), "\r", " ") + " "
+		names := parseList(extractSection(text, "NAME"))
+		if len(names) == 0 {
+			continue
+		}
+		must := parseList(extractSection(text, "MUST"))
+		may := parseList(extractSection(text, "MAY"))
+		sup := parseList(extractSection(text, "SUP"))
+
+		o := oc{must: must, may: may, sup: sup}
+		for _, n := range names {
+			ocMap[strings.ToLower(n)] = o
+		}
+	}
+
+	seen := map[string]bool{}
+	acc := map[string]struct{}{}
+
+	var visit func(string)
+	visit = func(n string) {
+		n = strings.ToLower(n)
+		if seen[n] {
+			return
+		}
+		seen[n] = true
+		o, ok := ocMap[n]
+		if !ok {
+			return
+		}
+		for _, a := range o.must {
+			acc[a] = struct{}{}
+		}
+		for _, a := range o.may {
+			acc[a] = struct{}{}
+		}
+		for _, s := range o.sup {
+			visit(s)
+		}
+	}
+	for _, ocn := range objClasses {
+		visit(ocn)
+	}
+
+	out := make([]string, 0, len(acc))
+	for a := range acc {
+		out = append(out, a)
+	}
+	sort.Strings(out)
+	return out, nil
 }

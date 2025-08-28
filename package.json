@@ -35,7 +35,7 @@
     "release": "pnpm prerelease && bumpp && pnpm docker:build && docker push dethdkn/ldap-nel:latest && docker push dethdkn/ldap-nel:$(node -p \"require('./package.json').version\")"
   },
   "dependencies": {
-    "@iconify-json/lucide": "^1.2.64",
+    "@iconify-json/lucide": "^1.2.65",
     "@nuxt/image": "^1.11.0",
     "@nuxt/ui": "^3.3.2",
     "@nuxtjs/seo": "^3.1.0",
