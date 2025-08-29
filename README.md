@@ -71,16 +71,13 @@ docker compose up -d --force-recreate
 
 ### Add
 - [ ] Add option to create a **new DN**
-- [x] Add option to create a **new Attribute**
 
 ### Update
-- [x] Implement **attribute update** functionality
 - [ ] Support common **LDAP password encryption** options when updating passwords
 - [ ] Add **copy** option
 - [ ] Add **move** option
 
 ### Delete
-- [x] Implement **attribute deletion**
 - [ ] Add option to delete a **DN**
 - [ ] Add **smart delete** (context-aware cleanup)
 

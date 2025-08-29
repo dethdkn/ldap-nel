@@ -5,6 +5,7 @@ import (
 
 	"github.com/dethdkn/ldap-nel/api/db"
 	"github.com/dethdkn/ldap-nel/api/ldap"
+	"github.com/dethdkn/ldap-nel/api/passwords"
 	"github.com/dethdkn/ldap-nel/api/utils"
 )
 
@@ -234,6 +235,13 @@ func AddLdapAttributeValue(id int64, dn, attribute, value string) error {
 		return errors.New("dn, attribute, and value are required")
 	}
 
+	if attribute == "userPassword" {
+		value, err = passwords.GetEncryptedPass(value)
+		if err != nil {
+			return err
+		}
+	}
+
 	err = ldap.AddAttributeValue(l.URL, l.Port, l.SSL, l.BindDN, l.BindPass, dn, attribute, value)
 	if err != nil {
 		return err
@@ -250,6 +258,13 @@ func UpdateLdapAttributeValue(id int64, dn, attribute, value, newValue string) e
 
 	if dn == "" || attribute == "" || value == "" || newValue == "" {
 		return errors.New("dn, attribute, value, and newValue are required")
+	}
+
+	if attribute == "userPassword" {
+		newValue, err = passwords.GetEncryptedPass(newValue)
+		if err != nil {
+			return err
+		}
 	}
 
 	err = ldap.UpdateAttributeValue(l.URL, l.Port, l.SSL, l.BindDN, l.BindPass, dn, attribute, value, newValue)

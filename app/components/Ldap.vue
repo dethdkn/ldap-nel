@@ -125,5 +125,7 @@ function search(fullDn: string){
   <SearchModal v-model="searchModal" :items @searched="search" />
   <AttributeAddModal v-if="user.admin" @refresh="refreshAttributes" />
   <AttributeUpdateModal v-if="user.admin" @refresh="refreshAttributes" />
+  <AttributeJpegPhotoModal v-if="user.admin" @refresh="refreshAttributes" />
+  <AttributePasswordModal v-if="user.admin" @refresh="refreshAttributes" />
   <AttributeDeleteModal v-if="user.admin" @refresh="refreshAttributes" />
 </template>

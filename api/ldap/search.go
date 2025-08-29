@@ -105,7 +105,6 @@ func GetPossibleAttributes(url string, port int64, ssl bool, bindDN, bindPass, d
 	if err != nil {
 		return nil, err
 	}
-
 	defer l.Unbind()
 
 	if bindDN != "" && bindPass != "" {
@@ -165,10 +164,9 @@ func GetPossibleAttributes(url string, port int64, ssl bool, bindDN, bindPass, d
 			" NO-USER-MODIFICATION ", " USAGE ", " X-",
 			" )",
 		}
-		lower := s
 		min := -1
 		for _, k := range keywords {
-			i := strings.Index(lower[pos:], k)
+			i := strings.Index(s[pos:], k)
 			if i >= 0 {
 				i = pos + i
 				if min == -1 || i < min {
@@ -178,6 +176,8 @@ func GetPossibleAttributes(url string, port int64, ssl bool, bindDN, bindPass, d
 		}
 		return min
 	}
+
+	attrCanonical := map[string]string{}
 
 	extractSection := func(s, kw string) string {
 		ls := strings.ToUpper(s)
@@ -210,7 +210,11 @@ func GetPossibleAttributes(url string, port int64, ssl bool, bindDN, bindPass, d
 			out := make([]string, 0, len(ms))
 			for _, m := range ms {
 				if v := strings.TrimSpace(m[1]); v != "" {
-					out = append(out, strings.ToLower(v))
+					low := strings.ToLower(v)
+					out = append(out, low)
+					if _, ok := attrCanonical[low]; !ok {
+						attrCanonical[low] = v
+					}
 				}
 			}
 			return out
@@ -223,7 +227,11 @@ func GetPossibleAttributes(url string, port int64, ssl bool, bindDN, bindPass, d
 			if p == "" {
 				continue
 			}
-			out = append(out, strings.ToLower(p))
+			low := strings.ToLower(p)
+			out = append(out, low)
+			if _, ok := attrCanonical[low]; !ok {
+				attrCanonical[low] = p
+			}
 		}
 		return out
 	}
@@ -274,7 +282,11 @@ func GetPossibleAttributes(url string, port int64, ssl bool, bindDN, bindPass, d
 
 	out := make([]string, 0, len(acc))
 	for a := range acc {
-		out = append(out, a)
+		if canon, ok := attrCanonical[a]; ok {
+			out = append(out, canon)
+		} else {
+			out = append(out, a)
+		}
 	}
 	sort.Strings(out)
 	return out, nil

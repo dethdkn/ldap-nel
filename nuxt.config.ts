@@ -21,5 +21,10 @@ export default defineNuxtConfig({
   },
   compatibilityDate: '2025-07-15',
   linkChecker: { enabled: false },
+  security: {
+    headers: {
+      contentSecurityPolicy: { 'default-src': ['\'self\''], 'img-src': ['\'self\'', 'data:', 'blob:'] },
+    },
+  },
   sitemap: { enabled: false },
 })
