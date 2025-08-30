@@ -51,9 +51,7 @@ const options = ref<DropdownMenuItem[][]>([[
   { icon: 'i-lucide-circle-plus', label: 'Add attribute', disabled: !user.value.admin, onSelect: () => openAddModal(selectedLdap.value || 0, selected.value?.fullDn || '') },
 ]])
 
-defineShortcuts({
-  meta_k: () => searchModal.value = !searchModal.value,
-})
+defineShortcuts({ meta_k: () => searchModal.value = !searchModal.value })
 
 function search(fullDn: string){
   handleSearch(treeWrapper, items.value[0]?.label || '', fullDn)
@@ -64,7 +62,6 @@ function search(fullDn: string){
   <div class="mb-4 flex w-full items-center justify-between">
     <div />
     <UBreadcrumb v-if="selected?.fullDn" :items="selected?.fullDn?.split(',')?.toReversed()?.map((dn:string) => ({label: dn, icon: getLdapIcon(dn, true)}))" />
-    <span v-else>-</span>
     <UDropdownMenu :items="options" size="sm">
       <UIcon name="i-lucide-ellipsis-vertical" class="cursor-pointer transition-all duration-300 hover:text-gray-400 hover:dark:text-gray-600" />
     </UDropdownMenu>

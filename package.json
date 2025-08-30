@@ -35,7 +35,7 @@
   "dependencies": {
     "@iconify-json/lucide": "^1.2.65",
     "@nuxt/image": "^1.11.0",
-    "@nuxt/ui": "^3.3.2",
+    "@nuxt/ui": "^4.0.0-alpha.0",
     "@nuxtjs/seo": "^3.1.0",
     "@vueuse/nuxt": "^13.8.0",
     "nuxt": "^4.0.3",

@@ -7,6 +7,5 @@
   }
 }
 @theme {
-  --spacing-content: calc(100vh - 65px);
   --spacing-ldap: calc(100vh - 100px);
 }

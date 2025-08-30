@@ -4,8 +4,10 @@ const { user } = useUserSession()
 
 <template>
   <Nav />
-  <slot />
-  <PasswordModal />
-  <SettingsModal v-if="user.admin" />
-  <AboutModal />
+  <UMain class="flex flex-col items-center justify-center space-y-1">
+    <slot />
+    <PasswordModal />
+    <SettingsModal v-if="user.admin" />
+    <AboutModal />
+  </UMain>
 </template>
