@@ -11,6 +11,8 @@ func main() {
 
 	server := gin.Default()
 
+	server.SetTrustedProxies([]string{"127.0.0.1", "::1"})
+
 	routes.RegisterRoutes(server)
 
 	server.Run(":8080")
