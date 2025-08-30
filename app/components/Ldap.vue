@@ -63,7 +63,8 @@ function search(fullDn: string){
 <template>
   <div class="mb-4 flex w-full items-center justify-between">
     <div />
-    <span>{{ selected?.fullDn?.split(',')?.join(', ') || '-' }}</span>
+    <UBreadcrumb v-if="selected?.fullDn" :items="selected?.fullDn?.split(',')?.toReversed()?.map((dn:string) => ({label: dn, icon: getLdapIcon(dn, true)}))" />
+    <span v-else>-</span>
     <UDropdownMenu :items="options" size="sm">
       <UIcon name="i-lucide-ellipsis-vertical" class="cursor-pointer transition-all duration-300 hover:text-gray-400 hover:dark:text-gray-600" />
     </UDropdownMenu>

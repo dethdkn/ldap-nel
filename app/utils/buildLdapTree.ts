@@ -15,14 +15,15 @@ function endsWithDN(dn: string, base: string){
   return true
 }
 
-function getLdapIcon(dn: string){
+export function getLdapIcon(dn: string, folder?: boolean){
   if(dn.toLowerCase().startsWith('uid=')) return 'i-lucide-user'
   else if(dn.toLowerCase().startsWith('l=')) return 'i-lucide-building'
   else if(dn.toLowerCase().startsWith('cn=')) return 'i-lucide-component'
+  else if(folder) return 'i-lucide-folder'
 }
 
 // eslint-disable-next-line typescript/no-explicit-any
-export function buildLdapTree(baseDn: string, dns: string[], onSelect: (e: any)=> void): TreeItem[]{
+export default function(baseDn: string, dns: string[], onSelect: (e: any)=> void): TreeItem[]{
   const root = {
     label: baseDn,
     value: baseDn.toLowerCase(),
