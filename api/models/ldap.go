@@ -310,3 +310,17 @@ func ExportLdap(id int64, dn string) (string, error) {
 
 	return ldif, nil
 }
+
+func ImportLdap(id int64, fileData []byte) error {
+	l, err := GetLdapByID(id, true)
+	if err != nil {
+		return err
+	}
+
+	err = ldap.ImportLdap(l.URL, l.Port, l.SSL, l.BindDN, l.BindPass, fileData)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}

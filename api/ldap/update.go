@@ -3,6 +3,8 @@ package ldap
 import (
 	"encoding/base64"
 	"errors"
+	"fmt"
+	"strings"
 
 	"github.com/go-ldap/ldap/v3"
 )
@@ -57,7 +59,6 @@ func AddAttributeValue(url string, port int64, ssl bool, bindDN, bindPass, dn, a
 		return nil
 	}
 
-	// --- Non-binary: normal ADD ---
 	modifyReq := ldap.NewModifyRequest(dn, nil)
 	modifyReq.Add(attribute, []string{value})
 	if err = l.Modify(modifyReq); err != nil {
@@ -121,6 +122,45 @@ func UpdateAttributeValue(url string, port int64, ssl bool, bindDN, bindPass, dn
 
 	if err = l.Modify(modifyReq); err != nil {
 		return err
+	}
+	return nil
+}
+
+func ImportLdap(url string, port int64, ssl bool, bindDN, bindPass string, fileData []byte) error {
+	l, err := Connect(url, port, ssl)
+	if err != nil {
+		return err
+	}
+	defer l.Unbind()
+
+	if bindDN != "" && bindPass != "" {
+		if err = l.Bind(bindDN, bindPass); err != nil {
+			return errors.New("failed to bind with provided credentials")
+		}
+	}
+
+	lines := unfold(fileData)
+	blocks := splitBlocks(lines)
+
+	for i, block := range blocks {
+		dn, attrs, err := parseAddBlock(block)
+		if err != nil {
+			return fmt.Errorf("ldif entry #%d: %w", i+1, err)
+		}
+		if dn == "" {
+			return fmt.Errorf("ldif entry #%d: missing dn", i+1)
+		}
+
+		req := ldap.NewAddRequest(dn, nil)
+		for name, values := range attrs {
+			if strings.EqualFold(name, "dn") {
+				continue
+			}
+			req.Attribute(name, values)
+		}
+		if err := l.Add(req); err != nil {
+			return fmt.Errorf("add %q failed: %w", dn, err)
+		}
 	}
 	return nil
 }

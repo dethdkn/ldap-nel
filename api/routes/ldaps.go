@@ -1,6 +1,7 @@
 package routes
 
 import (
+	"io"
 	"strconv"
 	"strings"
 
@@ -227,4 +228,46 @@ func exportLdap(c *gin.Context) {
 
 	c.Header("Content-Disposition", "attachment; filename=\""+Rdn+".ldif\"")
 	c.Data(200, "application/octet-stream", []byte(ldif))
+}
+
+func importLdap(c *gin.Context) {
+	var req struct {
+		ID string `form:"id" binding:"required"`
+	}
+	if err := c.ShouldBind(&req); err != nil {
+		c.JSON(400, gin.H{"message": "Could not bind form data"})
+		return
+	}
+
+	file, err := c.FormFile("file")
+	if err != nil {
+		c.JSON(400, gin.H{"message": "Could not get uploaded file"})
+		return
+	}
+
+	f, err := file.Open()
+	if err != nil {
+		c.JSON(500, gin.H{"message": "Could not open uploaded file"})
+		return
+	}
+	defer f.Close()
+
+	fileBytes, err := io.ReadAll(f)
+	if err != nil {
+		c.JSON(500, gin.H{"message": "Could not read uploaded file"})
+		return
+	}
+
+	idInt, err := strconv.Atoi(req.ID)
+	if err != nil {
+		c.JSON(400, gin.H{"message": "Invalid ID"})
+		return
+	}
+
+	if err := models.ImportLdap(int64(idInt), fileBytes); err != nil {
+		c.JSON(500, gin.H{"message": err.Error()})
+		return
+	}
+
+	c.JSON(200, gin.H{"message": "Ldif data imported successfully"})
 }

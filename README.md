@@ -79,10 +79,7 @@ docker compose up -d --force-recreate
 
 ### Delete
 - [ ] Add option to delete a **DN**
-- [ ] Add **smart delete** (context-aware cleanup)
-
-### Import
-- [ ] Add **import** option
+- [ ] Add **smart delete**
 
 ### Docs
 - [ ] Add **images** to README

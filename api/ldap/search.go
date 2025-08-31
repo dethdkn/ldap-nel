@@ -11,10 +11,6 @@ import (
 	"github.com/go-ldap/ldap/v3"
 )
 
-var binaryAttrs = map[string]bool{
-	"jpegPhoto": true,
-}
-
 func SearchChilds(url string, port int64, ssl bool, dn, bindDN, bindPass string) ([]string, error) {
 	l, err := Connect(url, port, ssl)
 	if err != nil {

@@ -7,6 +7,7 @@ const { selectedLdap } = await useLdapConnection()
 const { openAddModal } = useCrudModal()
 
 const searchModal = ref(false)
+const importModal = ref(false)
 
 const treeWrapper = ref<HTMLElement>()
 const items = ref<TreeItem[]>([])
@@ -22,6 +23,7 @@ function onSelect(e: any){
 async function refreshTree(){
   start()
   const { dn, childs } = await $fetch<{ childs: string[], dn: string }>('/server/ldap-childs', { method: 'post', body: { id: selectedLdap.value } })
+    .catch(error => { throw createError({ statusMessage: error?.data?.message || 'Server Error', fatal: true }) })
 
   items.value = buildLdapTree(dn, childs, onSelect)
 
@@ -32,6 +34,7 @@ async function refreshTree(){
 async function refreshAttributes(){
   start()
   const res = await $fetch<{ attributes: Record<string, string[]> }>('/server/ldap-attributes', { method: 'post', body: { id: selectedLdap.value, dn: selected.value?.fullDn } })
+    .catch(error => { throw createError({ statusMessage: error?.data?.message || 'Server Error', fatal: true }) })
   attributes.value = res.attributes
   finish()
 }
@@ -53,7 +56,7 @@ const options = ref<DropdownMenuItem[][]>([[
   { icon: 'i-lucide-folder-symlink', label: 'Move DN', disabled: !user.value.admin, onSelect: () => {} },
   { icon: 'i-lucide-circle-plus', label: 'Add attribute', disabled: !user.value.admin, onSelect: () => openAddModal(selectedLdap.value || 0, selected.value?.fullDn || '') },
   { icon: 'i-lucide-upload', label: 'Export', onSelect: () => globalThis.location.href = `/server/ldap-export/${selectedLdap.value}/${selected.value?.fullDn?.replaceAll(' ', '')}` },
-  { icon: 'i-lucide-download', label: 'Import', disabled: !user.value.admin, onSelect: () => {} },
+  { icon: 'i-lucide-download', label: 'Import', disabled: !user.value.admin, onSelect: () => importModal.value = true },
 ]])
 
 defineShortcuts({ meta_k: () => searchModal.value = !searchModal.value })
@@ -134,6 +137,7 @@ function rightClick(e: Event){
     </div>
   </div>
   <SearchModal v-model="searchModal" :items @searched="search" />
+  <LdapImportModal v-model="importModal" @refresh="refreshAll" />
   <AttributeAddModal v-if="user.admin" @refresh="refreshAttributes" />
   <AttributeUpdateModal v-if="user.admin" @refresh="refreshAttributes" />
   <AttributeJpegPhotoModal v-if="user.admin" @refresh="refreshAttributes" />
