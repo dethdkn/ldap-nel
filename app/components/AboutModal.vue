@@ -23,6 +23,7 @@ const { version } = useRuntimeConfig().public
             </NuxtLink>
           </p>
           <p>
+            <!-- eslint-disable-next-line harlanzw/link-lowercase -->
             This project is under <NuxtLink class="cursor-pointer text-blue-500 hover:underline" to="https://github.com/dethdkn/ldap-nel/blob/main/LICENSE" external target="_blank">
               MIT license
             </NuxtLink>

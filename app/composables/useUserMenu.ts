@@ -8,7 +8,7 @@ export default () => {
 
   const logout = () => {
     clearUserSession()
-    navigateTo('/login')
+    return navigateTo('/login')
   }
 
   return computed(() => {
