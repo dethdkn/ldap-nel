@@ -1,6 +1,9 @@
 package routes
 
 import (
+	"strconv"
+	"strings"
+
 	"github.com/dethdkn/ldap-nel/api/models"
 	"github.com/gin-gonic/gin"
 )
@@ -197,4 +200,31 @@ func deleteAttributeValue(c *gin.Context) {
 	}
 
 	c.JSON(200, gin.H{"message": "Attribute value deleted successfully"})
+}
+
+func exportLdap(c *gin.Context) {
+	id := c.Param("id")
+	dn := c.Param("dn")
+
+	firstRdn := strings.SplitN(dn, ",", 2)[0]
+	Rdn := strings.SplitN(firstRdn, "=", 2)[1]
+	if Rdn == "" {
+		c.JSON(400, gin.H{"message": "Invalid DN"})
+		return
+	}
+
+	idInt, err := strconv.Atoi(id)
+	if err != nil {
+		c.JSON(400, gin.H{"message": "Invalid ID"})
+		return
+	}
+
+	ldif, err := models.ExportLdap(int64(idInt), dn)
+	if err != nil {
+		c.JSON(500, gin.H{"message": err.Error()})
+		return
+	}
+
+	c.Header("Content-Disposition", "attachment; filename=\""+Rdn+".ldif\"")
+	c.Data(200, "application/octet-stream", []byte(ldif))
 }

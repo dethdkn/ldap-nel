@@ -3,6 +3,7 @@ package utils
 import (
 	"regexp"
 	"strings"
+	"unicode"
 )
 
 func SanitizeUsername(input string) string {
@@ -27,4 +28,13 @@ func ValidatePassword(password string) bool {
 	symbol := regexp.MustCompile(`[^a-zA-Z0-9]`)
 
 	return lower.MatchString(password) && upper.MatchString(password) && digit.MatchString(password) && symbol.MatchString(password)
+}
+
+func ContainsNonASCII(s string) bool {
+	for _, r := range s {
+		if r > unicode.MaxASCII {
+			return true
+		}
+	}
+	return false
 }

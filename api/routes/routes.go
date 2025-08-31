@@ -19,6 +19,8 @@ func RegisterRoutes(server *gin.Engine) {
 	authenticated.POST("/ldap-childs", getChilds)
 	authenticated.POST("/ldap-attributes", getAttributes)
 
+	authenticated.GET("/ldap-export/:id/:dn", exportLdap)
+
 	authenticatedAdmin := authenticated.Group("/", authenticateAdmin)
 	authenticatedAdmin.GET("/user", getUser)
 	authenticatedAdmin.GET("/users", getUsers)

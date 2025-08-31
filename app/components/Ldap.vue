@@ -49,6 +49,8 @@ const options = ref<DropdownMenuItem[][]>([[
   { icon: 'i-lucide-rotate-ccw', label: 'Refresh', onSelect: refreshAll },
   { icon: 'i-lucide-folder-plus', label: 'Add DN', disabled: !user.value.admin },
   { icon: 'i-lucide-circle-plus', label: 'Add attribute', disabled: !user.value.admin, onSelect: () => openAddModal(selectedLdap.value || 0, selected.value?.fullDn || '') },
+  { icon: 'i-lucide-upload', label: 'Export', onSelect: () => globalThis.location.href = `/server/ldap-export/${selectedLdap.value}/${selected.value?.fullDn?.replaceAll(' ', '')}` },
+  { icon: 'i-lucide-download', label: 'Import', onSelect: () => {} },
 ]])
 
 defineShortcuts({ meta_k: () => searchModal.value = !searchModal.value })

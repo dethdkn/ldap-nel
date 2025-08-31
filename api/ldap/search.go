@@ -7,6 +7,7 @@ import (
 	"sort"
 	"strings"
 
+	"github.com/dethdkn/ldap-nel/api/utils"
 	"github.com/go-ldap/ldap/v3"
 )
 
@@ -290,4 +291,55 @@ func GetPossibleAttributes(url string, port int64, ssl bool, bindDN, bindPass, d
 	}
 	sort.Strings(out)
 	return out, nil
+}
+
+func ExportLdap(url string, port int64, ssl bool, bindDN, bindPass, dn string) (string, error) {
+	l, err := Connect(url, port, ssl)
+	if err != nil {
+		return "", err
+	}
+	defer l.Unbind()
+
+	if bindDN != "" && bindPass != "" {
+		if err = l.Bind(bindDN, bindPass); err != nil {
+			return "", errors.New("failed to bind with provided credentials")
+		}
+	}
+
+	searchReq := ldap.NewSearchRequest(
+		dn,
+		ldap.ScopeWholeSubtree, ldap.NeverDerefAliases, 0, 0, false,
+		"(objectClass=*)",
+		nil,
+		nil,
+	)
+
+	result, err := l.Search(searchReq)
+	if err != nil {
+		return "", errors.New("failed to search for entries")
+	}
+
+	if len(result.Entries) == 0 {
+		return "", nil
+	}
+
+	var builder strings.Builder
+	for _, entry := range result.Entries {
+		builder.WriteString("dn: " + entry.DN + "\n")
+		for _, attr := range entry.Attributes {
+			for _, value := range attr.Values {
+				shouldEncode := binaryAttrs[attr.Name] || utils.ContainsNonASCII(value)
+
+				if shouldEncode {
+					encoded := base64.StdEncoding.EncodeToString([]byte(value))
+					builder.WriteString(attr.Name + ":: " + encoded + "\n")
+				} else {
+					builder.WriteString(attr.Name + ": " + value + "\n")
+				}
+			}
+		}
+		builder.WriteString("\n")
+	}
+
+	return builder.String(), nil
 }

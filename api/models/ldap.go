@@ -292,3 +292,21 @@ func DeleteLdapAttributeValue(id int64, dn, attribute, value string) error {
 
 	return nil
 }
+
+func ExportLdap(id int64, dn string) (string, error) {
+	l, err := GetLdapByID(id, true)
+	if err != nil {
+		return "", err
+	}
+
+	if dn == "" {
+		dn = l.BaseDN
+	}
+
+	ldif, err := ldap.ExportLdap(l.URL, l.Port, l.SSL, l.BindDN, l.BindPass, dn)
+	if err != nil {
+		return "", err
+	}
+
+	return ldif, nil
+}
