@@ -47,16 +47,25 @@ async function refreshAll(){
 const options = ref<DropdownMenuItem[][]>([[
   { icon: 'i-lucide-search', label: 'Search', kbds: ['meta', 'k'], onSelect: () => searchModal.value = true },
   { icon: 'i-lucide-rotate-ccw', label: 'Refresh', onSelect: refreshAll },
-  { icon: 'i-lucide-folder-plus', label: 'Add DN', disabled: !user.value.admin },
+  { icon: 'i-lucide-folder-plus', label: 'Add DN', disabled: !user.value.admin, onSelect: () => {} },
+  { icon: 'i-lucide-folder-minus', label: 'Delete DN', disabled: !user.value.admin, onSelect: () => {} },
+  { icon: 'i-lucide-folders', label: 'Copy DN', disabled: !user.value.admin, onSelect: () => {} },
+  { icon: 'i-lucide-folder-symlink', label: 'Move DN', disabled: !user.value.admin, onSelect: () => {} },
   { icon: 'i-lucide-circle-plus', label: 'Add attribute', disabled: !user.value.admin, onSelect: () => openAddModal(selectedLdap.value || 0, selected.value?.fullDn || '') },
   { icon: 'i-lucide-upload', label: 'Export', onSelect: () => globalThis.location.href = `/server/ldap-export/${selectedLdap.value}/${selected.value?.fullDn?.replaceAll(' ', '')}` },
-  { icon: 'i-lucide-download', label: 'Import', onSelect: () => {} },
+  { icon: 'i-lucide-download', label: 'Import', disabled: !user.value.admin, onSelect: () => {} },
 ]])
 
 defineShortcuts({ meta_k: () => searchModal.value = !searchModal.value })
 
 function search(fullDn: string){
   handleSearch(treeWrapper, items.value[0]?.label || '', fullDn)
+}
+
+function rightClick(e: Event){
+  const target = e.target as HTMLElement
+  const button = target.tagName === 'BUTTON' ? target : target.closest('button')
+  if(button instanceof HTMLButtonElement) button.click()
 }
 </script>
 
@@ -69,9 +78,11 @@ function search(fullDn: string){
     </UDropdownMenu>
   </div>
   <div class="space-between h-ldap max-h-ldap flex w-full justify-between space-x-4 overflow-x-auto">
-    <div ref="treeWrapper" class="max-h-ldap min-w-64 overflow-auto">
-      <UTree v-model="selected" v-model:expanded="expanded" :items />
-    </div>
+    <UContextMenu :items="options" size="sm">
+      <div ref="treeWrapper" class="max-h-ldap min-w-64 overflow-auto">
+        <UTree v-model="selected" v-model:expanded="expanded" :items @click.right="rightClick" />
+      </div>
+    </UContextMenu>
     <div class="max-h-ldap w-full min-w-92 overflow-auto">
       <table class="w-full table-fixed text-left text-sm text-gray-500 dark:text-gray-400">
         <thead class="bg-gray-200 text-xs text-gray-700 uppercase dark:bg-gray-700 dark:text-gray-400">
