@@ -16,6 +16,7 @@ const { version } = useRuntimeConfig().public
           <UButton icon="i-lucide-github" size="md" color="neutral" variant="outline" to="https://github.com/dethdkn/ldap-nel" external target="_blank" />
           <UButton icon="i-lucide-history" size="md" color="neutral" variant="outline" to="https://github.com/dethdkn/ldap-nel/releases" external target="_blank" />
         </div>
+        <UButton icon="i-lucide-heart" label="Sponsor" size="md" color="neutral" variant="outline" to="https://github.com/sponsors/dethdkn" external target="_blank" :ui="{leadingIcon: 'text-pink-500'}" />
         <div class="text-center">
           <p>
             Copyright © 2025 <NuxtLink class="cursor-pointer text-blue-500 hover:underline" to="https://rosa.dev.br" external target="_blank">
