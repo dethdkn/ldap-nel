@@ -119,7 +119,7 @@ whenever(() => !model.value, () => {
                   {{ attribute === 'userPassword' ? '*' : value.length }}
                 </td>
                 <td class="px-6 py-4 text-center">
-                  <UButton variant="subtle" size="xs" class="rounded-full" icon="i-lucide-trash" color="error" @click="state.attributes.splice(key, 1)" />
+                  <UButton variant="ghost" size="xs" class="rounded-full" icon="i-lucide-trash" color="error" @click="state.attributes.splice(key, 1)" />
                 </td>
               </tr>
 
@@ -179,7 +179,7 @@ whenever(() => !model.value, () => {
     </template>
     <template #footer="{ close }">
       <UButton label="Cancel" color="neutral" variant="outline" :disabled="isLoading" @click="close" />
-      <UButton label="Submit" color="neutral" :loading="isLoading" @click="addAttribute" />
+      <UButton label="Add" color="neutral" :loading="isLoading" @click="addAttribute" />
     </template>
   </UModal>
 </template>
