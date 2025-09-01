@@ -69,9 +69,6 @@ docker compose up -d --force-recreate
 
 ## 🎯 Todo
 
-### Add
-- [ ] Add option to create a **new DN**
-
 ### Update
 - [ ] Support common **LDAP password encryption** options when updating passwords
 - [ ] Add **copy** option

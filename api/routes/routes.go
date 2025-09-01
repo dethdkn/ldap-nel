@@ -7,6 +7,12 @@ type reqID struct {
 }
 
 func RegisterRoutes(server *gin.Engine) {
+	server.NoRoute(func(c *gin.Context) {
+		c.JSON(404, gin.H{
+			"message": "Not Found",
+		})
+	})
+
 	server.GET("/users-empty", isUsersEmpty)
 	server.POST("/first-user", createFirstUser)
 	server.POST("/login", login)
@@ -41,4 +47,6 @@ func RegisterRoutes(server *gin.Engine) {
 	authenticatedAdmin.POST("/attribute-value", addAttributeValue)
 	authenticatedAdmin.PUT("/attribute-value", updateAttributeValue)
 	authenticatedAdmin.DELETE("/attribute-value", deleteAttributeValue)
+
+	authenticatedAdmin.POST("/dn", addDn)
 }

@@ -9,6 +9,11 @@ import (
 	"github.com/go-ldap/ldap/v3"
 )
 
+type Attribute struct {
+	Attribute string `json:"attribute" binding:"required"`
+	Value     string `json:"value" binding:"required"`
+}
+
 func AddAttributeValue(url string, port int64, ssl bool, bindDN, bindPass, dn, attribute, value string) error {
 	l, err := Connect(url, port, ssl)
 	if err != nil {
@@ -162,5 +167,45 @@ func ImportLdap(url string, port int64, ssl bool, bindDN, bindPass string, fileD
 			return fmt.Errorf("add %q failed: %w", dn, err)
 		}
 	}
+	return nil
+}
+
+func AddDn(url string, port int64, ssl bool, bindDN, bindPass, dn string, attributes []Attribute) error {
+	l, err := Connect(url, port, ssl)
+	if err != nil {
+		return err
+	}
+	defer l.Unbind()
+
+	if bindDN != "" && bindPass != "" {
+		if err = l.Bind(bindDN, bindPass); err != nil {
+			return errors.New("failed to bind with provided credentials")
+		}
+	}
+
+	req := ldap.NewAddRequest(dn, nil)
+
+	grouped := make(map[string][]string)
+
+	for _, attr := range attributes {
+		if binaryAttrs[attr.Attribute] {
+			data, err := base64.StdEncoding.DecodeString(attr.Value)
+			if err != nil {
+				return err
+			}
+			grouped[attr.Attribute] = append(grouped[attr.Attribute], string(data))
+		} else {
+			grouped[attr.Attribute] = append(grouped[attr.Attribute], attr.Value)
+		}
+	}
+
+	for name, values := range grouped {
+		req.Attribute(name, values)
+	}
+
+	if err := l.Add(req); err != nil {
+		return err
+	}
+
 	return nil
 }

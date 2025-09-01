@@ -28,3 +28,14 @@ export const attributeNewValueSchema = attributeValueSchema.extend({
   .refine(data => data.value !== data.newValue, { message: 'New Value must be different from old value', path: ['newValue'] })
 
 export type AttributeNewValue = z.infer<typeof attributeNewValueSchema>
+
+export const newDnSchema = z.object({
+  id: z.number().default(0),
+  dn: z.string().min(1, 'DN is required').trim().transform(val => val.endsWith(',') ? val.slice(0, -1) : val),
+  attributes: z.array(z.object({
+    attribute: z.string().min(1, 'Attribute is required'),
+    value: z.string().min(1, 'Value is required'),
+  })),
+})
+
+export type NewDn = z.infer<typeof newDnSchema>

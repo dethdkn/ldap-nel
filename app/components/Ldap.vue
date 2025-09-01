@@ -7,6 +7,7 @@ const { selectedLdap } = await useLdapConnection()
 const { openAddModal } = useCrudModal()
 
 const searchModal = ref(false)
+const addDnModal = ref(false)
 const importModal = ref(false)
 
 const treeWrapper = ref<HTMLElement>()
@@ -50,7 +51,7 @@ async function refreshAll(){
 const options = ref<DropdownMenuItem[][]>([[
   { icon: 'i-lucide-search', label: 'Search', kbds: ['meta', 'k'], onSelect: () => searchModal.value = true },
   { icon: 'i-lucide-rotate-ccw', label: 'Refresh', onSelect: refreshAll },
-  { icon: 'i-lucide-folder-plus', label: 'Add DN', disabled: !user.value.admin, onSelect: () => {} },
+  { icon: 'i-lucide-folder-plus', label: 'Add DN', disabled: !user.value.admin, onSelect: () => addDnModal.value = true },
   { icon: 'i-lucide-folder-minus', label: 'Delete DN', disabled: !user.value.admin, onSelect: () => {} },
   { icon: 'i-lucide-folders', label: 'Copy DN', disabled: !user.value.admin, onSelect: () => {} },
   { icon: 'i-lucide-folder-symlink', label: 'Move DN', disabled: !user.value.admin, onSelect: () => {} },
@@ -69,6 +70,11 @@ function rightClick(e: Event){
   const target = e.target as HTMLElement
   const button = target.tagName === 'BUTTON' ? target : target.closest('button')
   if(button instanceof HTMLButtonElement) button.click()
+}
+
+async function updateSearch(fullDn: string){
+  await refreshTree()
+  search(fullDn)
 }
 </script>
 
@@ -137,7 +143,8 @@ function rightClick(e: Event){
     </div>
   </div>
   <SearchModal v-model="searchModal" :items @searched="search" />
-  <LdapImportModal v-model="importModal" @refresh="refreshAll" />
+  <AddDnModal v-model="addDnModal" :base-dn="items?.[0]?.fullDn || ''" @refresh="updateSearch" />
+  <ImportModal v-model="importModal" @refresh="refreshAll" />
   <AttributeAddModal v-if="user.admin" @refresh="refreshAttributes" />
   <AttributeUpdateModal v-if="user.admin" @refresh="refreshAttributes" />
   <AttributeJpegPhotoModal v-if="user.admin" @refresh="refreshAttributes" />

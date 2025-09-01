@@ -5,6 +5,7 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/dethdkn/ldap-nel/api/ldap"
 	"github.com/dethdkn/ldap-nel/api/models"
 	"github.com/gin-gonic/gin"
 )
@@ -270,4 +271,26 @@ func importLdap(c *gin.Context) {
 	}
 
 	c.JSON(200, gin.H{"message": "Ldif data imported successfully"})
+}
+
+func addDn(c *gin.Context) {
+	type reqAttrs struct {
+		ID         int64            `json:"id" binding:"required"`
+		DN         string           `json:"dn" binding:"required"`
+		Attributes []ldap.Attribute `json:"attributes" binding:"required,dive"`
+	}
+
+	var req reqAttrs
+
+	if err := c.ShouldBindJSON(&req); err != nil {
+		c.JSON(400, gin.H{"message": "Could not bind JSON"})
+		return
+	}
+
+	if err := models.AddLdapDn(req.ID, req.DN, req.Attributes); err != nil {
+		c.JSON(500, gin.H{"message": err.Error()})
+		return
+	}
+
+	c.JSON(200, gin.H{"message": "DN added successfully"})
 }

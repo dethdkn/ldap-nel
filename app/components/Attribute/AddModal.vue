@@ -47,7 +47,11 @@ async function addAttributeValue(){
   addModal.value = false
 }
 
-whenever(() => !addModal.value, () => uploadedFile.value = undefined)
+whenever(() => !addModal.value, () => {
+  possibleAttributes.value = []
+  uploadedFile.value = undefined
+  encryptionMethod.value = passwordEncryptionMethods[0] || 'Plain Text'
+})
 </script>
 
 <template>

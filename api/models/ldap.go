@@ -324,3 +324,27 @@ func ImportLdap(id int64, fileData []byte) error {
 
 	return nil
 }
+
+func AddLdapDn(id int64, dn string, attributes []ldap.Attribute) error {
+	l, err := GetLdapByID(id, true)
+	if err != nil {
+		return err
+	}
+
+	for val, attr := range attributes {
+		if attr.Attribute == "userPassword" {
+			attr.Value, err = passwords.GetEncryptedPass(attr.Value)
+			if err != nil {
+				return err
+			}
+			attributes[val] = attr
+		}
+	}
+
+	err = ldap.AddDn(l.URL, l.Port, l.SSL, l.BindDN, l.BindPass, dn, attributes)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
