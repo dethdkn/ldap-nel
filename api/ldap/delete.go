@@ -73,3 +73,45 @@ func DeleteAttributeValue(url string, port int64, ssl bool, bindDN, bindPass, dn
 	}
 	return nil
 }
+
+func DeleteDn(url string, port int64, ssl bool, bindDN, bindPass, dn string, smart bool) error {
+	l, err := Connect(url, port, ssl)
+	if err != nil {
+		return err
+	}
+
+	defer l.Unbind()
+
+	if bindDN != "" && bindPass != "" {
+		if err = l.Bind(bindDN, bindPass); err != nil {
+			return errors.New("failed to bind with provided credentials")
+		}
+	}
+
+	if smart {
+		searchReq := ldap.NewSearchRequest(
+			dn, ldap.ScopeSingleLevel, ldap.NeverDerefAliases, 0, 0, false,
+			"(objectClass=*)",
+			[]string{"dn"},
+			nil,
+		)
+
+		searchRes, err := l.Search(searchReq)
+		if err != nil {
+			return err
+		}
+
+		for _, entry := range searchRes.Entries {
+			if err := DeleteDn(url, port, ssl, bindDN, bindPass, entry.DN, smart); err != nil {
+				return err
+			}
+		}
+	}
+
+	delReq := ldap.NewDelRequest(dn, nil)
+	if err = l.Del(delReq); err != nil {
+		return err
+	}
+
+	return nil
+}

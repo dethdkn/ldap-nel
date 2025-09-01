@@ -30,7 +30,7 @@ async function deleteAttributeValue(){
   <UModal v-model:open="deleteModal" title="Delete Attribute Value" :ui="{ footer: 'justify-end' }">
     <template #body>
       <div class="text-center break-words">
-        <p>Are you sure you want do delete</p>
+        <p>Are you sure you want to delete</p>
         <p><strong>{{ deleteState.attribute }}: {{ deleteState.value }}</strong></p>
         <p>from <strong>{{ deleteState.dn }}</strong>?</p>
       </div>

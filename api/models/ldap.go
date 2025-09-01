@@ -348,3 +348,21 @@ func AddLdapDn(id int64, dn string, attributes []ldap.Attribute) error {
 
 	return nil
 }
+
+func DeleteLdapDn(id int64, dn string, smart bool) error {
+	l, err := GetLdapByID(id, true)
+	if err != nil {
+		return err
+	}
+
+	if dn == "" {
+		return errors.New("dn is required")
+	}
+
+	err = ldap.DeleteDn(l.URL, l.Port, l.SSL, l.BindDN, l.BindPass, dn, smart)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}

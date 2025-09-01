@@ -74,12 +74,8 @@ docker compose up -d --force-recreate
 - [ ] Add **copy** option
 - [ ] Add **move** option
 
-### Delete
-- [ ] Add option to delete a **DN**
-- [ ] Add **smart delete**
-
 ### Docs
-- [ ] Add **images** to README
+- [ ] Add **video** to README
 - [ ] Create **VitePress** documentation
 
 ## 📝 License

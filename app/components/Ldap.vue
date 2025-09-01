@@ -4,7 +4,7 @@ import type { DropdownMenuItem, TreeItem } from '@nuxt/ui'
 const { user } = useUserSession()
 const { start, finish } = useLoadingIndicator()
 const { selectedLdap } = await useLdapConnection()
-const { openAddModal } = useCrudModal()
+const { openAddModal, openDeleteDnModal } = useCrudModal()
 
 const searchModal = ref(false)
 const addDnModal = ref(false)
@@ -43,16 +43,17 @@ async function refreshAttributes(){
 watch(selectedLdap, refreshTree, { immediate: true })
 watch(selected, refreshAttributes)
 
-async function refreshAll(){
+async function refreshAll(unselect?: boolean){
+  if(unselect) selected.value = undefined
   await refreshTree()
   await refreshAttributes()
 }
 
 const options = ref<DropdownMenuItem[][]>([[
   { icon: 'i-lucide-search', label: 'Search', kbds: ['meta', 'k'], onSelect: () => searchModal.value = true },
-  { icon: 'i-lucide-rotate-ccw', label: 'Refresh', onSelect: refreshAll },
+  { icon: 'i-lucide-rotate-ccw', label: 'Refresh', onSelect: () => refreshAll() },
   { icon: 'i-lucide-folder-plus', label: 'Add DN', disabled: !user.value.admin, onSelect: () => addDnModal.value = true },
-  { icon: 'i-lucide-folder-minus', label: 'Delete DN', disabled: !user.value.admin, onSelect: () => {} },
+  { icon: 'i-lucide-folder-minus', label: 'Delete DN', disabled: !user.value.admin, onSelect: () => openDeleteDnModal(selectedLdap.value || 0, selected.value?.fullDn || '') },
   { icon: 'i-lucide-folders', label: 'Copy DN', disabled: !user.value.admin, onSelect: () => {} },
   { icon: 'i-lucide-folder-symlink', label: 'Move DN', disabled: !user.value.admin, onSelect: () => {} },
   { icon: 'i-lucide-circle-plus', label: 'Add attribute', disabled: !user.value.admin, onSelect: () => openAddModal(selectedLdap.value || 0, selected.value?.fullDn || '') },
@@ -111,17 +112,17 @@ async function updateSearch(fullDn: string){
           <template v-for="(attrK, key) in Object.keys(attributes)" :key="`${attrK}-${key}`">
             <UPopover v-for="(val, k) in attributes[attrK]" :key="`${val}-${k}`" :mode="attrK === 'jpegPhoto' ? 'hover' : 'click'" :content="{side: 'top'}">
               <tr class="bg-gray-50 hover:bg-gray-300 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-600">
-                <UContextMenu :items="$buildContextMenu(selectedLdap || 0, selected.fullDn, attrK, val)" size="sm">
+                <UContextMenu :items="$buildContextMenu(selectedLdap || 0, selected?.fullDn || '', attrK, val)" size="sm">
                   <td class="px-6 py-4">
                     {{ attrK }}
                   </td>
                 </UContextMenu>
-                <UContextMenu :items="$buildContextMenu(selectedLdap || 0, selected.fullDn, attrK, val)" size="sm">
+                <UContextMenu :items="$buildContextMenu(selectedLdap || 0, selected?.fullDn || '', attrK, val)" size="sm">
                   <td class="max-w-20 truncate px-6 py-4">
                     {{ val }}
                   </td>
                 </UContextMenu>
-                <UContextMenu :items="$buildContextMenu(selectedLdap || 0, selected.fullDn, attrK, val)" size="sm">
+                <UContextMenu :items="$buildContextMenu(selectedLdap || 0, selected?.fullDn || '', attrK, val)" size="sm">
                   <td class="px-6 py-4 text-end">
                     {{ val.length }}
                   </td>
@@ -143,8 +144,9 @@ async function updateSearch(fullDn: string){
     </div>
   </div>
   <SearchModal v-model="searchModal" :items @searched="search" />
-  <AddDnModal v-model="addDnModal" :base-dn="items?.[0]?.fullDn || ''" @refresh="updateSearch" />
-  <ImportModal v-model="importModal" @refresh="refreshAll" />
+  <DnAddModal v-if="user.admin" v-model="addDnModal" :base-dn="items?.[0]?.fullDn || ''" @refresh="updateSearch" />
+  <DnDeleteModal v-if="user.admin" @refresh="() => refreshAll(true)" />
+  <ImportModal v-if="user.admin" v-model="importModal" @refresh="refreshAll" />
   <AttributeAddModal v-if="user.admin" @refresh="refreshAttributes" />
   <AttributeUpdateModal v-if="user.admin" @refresh="refreshAttributes" />
   <AttributeJpegPhotoModal v-if="user.admin" @refresh="refreshAttributes" />

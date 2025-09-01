@@ -49,4 +49,5 @@ func RegisterRoutes(server *gin.Engine) {
 	authenticatedAdmin.DELETE("/attribute-value", deleteAttributeValue)
 
 	authenticatedAdmin.POST("/dn", addDn)
+	authenticatedAdmin.DELETE("/dn", deleteDn)
 }
