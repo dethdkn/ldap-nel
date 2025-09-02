@@ -8,6 +8,7 @@ require (
 	github.com/go-ldap/ldap/v3 v3.4.11
 	github.com/golang-jwt/jwt/v5 v5.3.0
 	github.com/mattn/go-sqlite3 v1.14.32
+	golang.org/x/crypto v0.41.0
 )
 
 require (
@@ -33,7 +34,6 @@ require (
 	github.com/twitchyliquid64/golang-asm v0.15.1 // indirect
 	github.com/ugorji/go/codec v1.3.0 // indirect
 	golang.org/x/arch v0.20.0 // indirect
-	golang.org/x/crypto v0.41.0 // indirect
 	golang.org/x/net v0.43.0 // indirect
 	golang.org/x/sys v0.35.0 // indirect
 	golang.org/x/text v0.28.0 // indirect

@@ -31,6 +31,8 @@ async function updatePasswordValue(){
   emit('refresh')
   passwordModal.value = false
 }
+
+whenever(() => !passwordModal.value, () => encryptionMethod.value = passwordEncryptionMethods[0] || 'Plain Text')
 </script>
 
 <template>

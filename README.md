@@ -69,9 +69,6 @@ docker compose up -d --force-recreate
 
 ## 🎯 Todo
 
-### Update
-- [ ] Support common **LDAP password encryption** options when updating passwords
-
 ### Docs
 - [ ] Add **video** to README
 - [ ] Create **VitePress** documentation

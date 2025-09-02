@@ -32,12 +32,10 @@ export default createGlobalState(() => {
     updateModal.value = true
   }
   function openJpegPhotoModal(ldap: number, dn: string, attr: string, val: string){
-    if(!dn) return toast.add({ title: 'Please select a DN first', icon: 'i-lucide-shield-alert', color: 'error' })
     jpegPhotoState.value = { id: ldap, dn, attribute: attr, value: val, newValue: val }
     jpegPhotoModal.value = true
   }
   function openPasswordModal(ldap: number, dn: string, attr: string, val: string){
-    if(!dn) return toast.add({ title: 'Please select a DN first', icon: 'i-lucide-shield-alert', color: 'error' })
     passwordState.value = { id: ldap, dn, attribute: attr, value: val, newValue: val }
     passwordModal.value = true
   }
