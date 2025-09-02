@@ -312,3 +312,43 @@ func deleteDn(c *gin.Context) {
 
 	c.JSON(200, gin.H{"message": "DN deleted successfully"})
 }
+
+func copyDn(c *gin.Context) {
+	var req struct {
+		ID       int64  `json:"id" binding:"required"`
+		Dn       string `json:"dn" binding:"required"`
+		TargetDn string `json:"targetDn" binding:"required"`
+	}
+
+	if err := c.ShouldBindJSON(&req); err != nil {
+		c.JSON(400, gin.H{"message": "Could not bind JSON"})
+		return
+	}
+
+	if err := models.CopyLdapDn(req.ID, req.Dn, req.TargetDn); err != nil {
+		c.JSON(500, gin.H{"message": err.Error()})
+		return
+	}
+
+	c.JSON(200, gin.H{"message": "DN copied successfully"})
+}
+
+func moveDn(c *gin.Context) {
+	var req struct {
+		ID       int64  `json:"id" binding:"required"`
+		Dn       string `json:"dn" binding:"required"`
+		TargetDn string `json:"targetDn" binding:"required"`
+	}
+
+	if err := c.ShouldBindJSON(&req); err != nil {
+		c.JSON(400, gin.H{"message": "Could not bind JSON"})
+		return
+	}
+
+	if err := models.MoveLdapDn(req.ID, req.Dn, req.TargetDn); err != nil {
+		c.JSON(500, gin.H{"message": err.Error()})
+		return
+	}
+
+	c.JSON(200, gin.H{"message": "DN moved successfully"})
+}

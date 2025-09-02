@@ -71,8 +71,6 @@ docker compose up -d --force-recreate
 
 ### Update
 - [ ] Support common **LDAP password encryption** options when updating passwords
-- [ ] Add **copy** option
-- [ ] Add **move** option
 
 ### Docs
 - [ ] Add **video** to README

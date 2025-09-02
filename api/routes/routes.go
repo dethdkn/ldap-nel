@@ -50,4 +50,7 @@ func RegisterRoutes(server *gin.Engine) {
 
 	authenticatedAdmin.POST("/dn", addDn)
 	authenticatedAdmin.DELETE("/dn", deleteDn)
+
+	authenticatedAdmin.POST("/copy-dn", copyDn)
+	authenticatedAdmin.POST("/move-dn", moveDn)
 }

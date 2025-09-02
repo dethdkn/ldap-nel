@@ -39,3 +39,11 @@ export const newDnSchema = z.object({
 })
 
 export type NewDn = z.infer<typeof newDnSchema>
+
+export const CopyMoveSchema = z.object({
+  id: z.number().default(0),
+  dn: z.string().min(1, 'Source DN is required').trim(),
+  targetDn: z.string().min(1, 'Target DN is required').trim(),
+})
+
+export type CopyMove = z.infer<typeof CopyMoveSchema>

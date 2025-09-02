@@ -366,3 +366,39 @@ func DeleteLdapDn(id int64, dn string, smart bool) error {
 
 	return nil
 }
+
+func CopyLdapDn(id int64, dn, targetDn string) error {
+	l, err := GetLdapByID(id, true)
+	if err != nil {
+		return err
+	}
+
+	if dn == "" || targetDn == "" {
+		return errors.New("dn and targetDn are required")
+	}
+
+	err = ldap.CopyDn(l.URL, l.Port, l.SSL, l.BindDN, l.BindPass, dn, targetDn)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func MoveLdapDn(id int64, dn, targetDn string) error {
+	l, err := GetLdapByID(id, true)
+	if err != nil {
+		return err
+	}
+
+	if dn == "" || targetDn == "" {
+		return errors.New("dn and targetDn are required")
+	}
+
+	err = ldap.MoveDn(l.URL, l.Port, l.SSL, l.BindDN, l.BindPass, dn, targetDn)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}

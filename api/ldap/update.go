@@ -209,3 +209,71 @@ func AddDn(url string, port int64, ssl bool, bindDN, bindPass, dn string, attrib
 
 	return nil
 }
+
+func CopyDn(url string, port int64, ssl bool, bindDN, bindPass, dn, targetDn string) error {
+	l, err := Connect(url, port, ssl)
+	if err != nil {
+		return err
+	}
+	defer l.Unbind()
+
+	if bindDN != "" && bindPass != "" {
+		if err = l.Bind(bindDN, bindPass); err != nil {
+			return errors.New("failed to bind with provided credentials")
+		}
+	}
+
+	searchReq := ldap.NewSearchRequest(
+		dn,
+		ldap.ScopeBaseObject, ldap.NeverDerefAliases, 0, 0, false,
+		"(objectClass=*)",
+		nil,
+		nil,
+	)
+
+	entry, err := l.Search(searchReq)
+	if err != nil {
+		return err
+	}
+
+	if len(entry.Entries) == 0 {
+		return fmt.Errorf("DN %q not found", dn)
+	}
+
+	req := ldap.NewAddRequest(targetDn, nil)
+
+	for _, attr := range entry.Entries[0].Attributes {
+		req.Attribute(attr.Name, attr.Values)
+	}
+
+	if err := l.Add(req); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func MoveDn(url string, port int64, ssl bool, bindDN, bindPass, dn, targetDn string) error {
+	l, err := Connect(url, port, ssl)
+	if err != nil {
+		return err
+	}
+	defer l.Unbind()
+
+	if bindDN != "" && bindPass != "" {
+		if err = l.Bind(bindDN, bindPass); err != nil {
+			return errors.New("failed to bind with provided credentials")
+		}
+	}
+
+	reqParts := strings.SplitN(targetDn, ",", 2)
+	if len(reqParts) != 2 {
+		return errors.New("invalid targetDn")
+	}
+	req := ldap.NewModifyDNRequest(dn, reqParts[0], true, reqParts[1])
+	if err := l.ModifyDN(req); err != nil {
+		return err
+	}
+
+	return nil
+}

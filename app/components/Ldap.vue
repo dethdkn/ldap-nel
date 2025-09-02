@@ -4,7 +4,7 @@ import type { DropdownMenuItem, TreeItem } from '@nuxt/ui'
 const { user } = useUserSession()
 const { start, finish } = useLoadingIndicator()
 const { selectedLdap } = await useLdapConnection()
-const { openAddModal, openDeleteDnModal } = useCrudModal()
+const { openAddModal, openDeleteDnModal, openCopyModal, openMoveModal } = useCrudModal()
 
 const searchModal = ref(false)
 const addDnModal = ref(false)
@@ -54,8 +54,8 @@ const options = ref<DropdownMenuItem[][]>([[
   { icon: 'i-lucide-rotate-ccw', label: 'Refresh', onSelect: () => refreshAll() },
   { icon: 'i-lucide-folder-plus', label: 'Add DN', disabled: !user.value.admin, onSelect: () => addDnModal.value = true },
   { icon: 'i-lucide-folder-minus', label: 'Delete DN', disabled: !user.value.admin, onSelect: () => openDeleteDnModal(selectedLdap.value || 0, selected.value?.fullDn || '') },
-  { icon: 'i-lucide-folders', label: 'Copy DN', disabled: !user.value.admin, onSelect: () => {} },
-  { icon: 'i-lucide-folder-symlink', label: 'Move DN', disabled: !user.value.admin, onSelect: () => {} },
+  { icon: 'i-lucide-folders', label: 'Copy DN', disabled: !user.value.admin, onSelect: () => openCopyModal(selectedLdap.value || 0, selected.value?.fullDn || '') },
+  { icon: 'i-lucide-folder-symlink', label: 'Move DN', disabled: !user.value.admin, onSelect: () => openMoveModal(selectedLdap.value || 0, selected.value?.fullDn || '') },
   { icon: 'i-lucide-circle-plus', label: 'Add attribute', disabled: !user.value.admin, onSelect: () => openAddModal(selectedLdap.value || 0, selected.value?.fullDn || '') },
   { icon: 'i-lucide-upload', label: 'Export', onSelect: () => globalThis.location.href = `/server/ldap-export/${selectedLdap.value}/${selected.value?.fullDn?.replaceAll(' ', '')}` },
   { icon: 'i-lucide-download', label: 'Import', disabled: !user.value.admin, onSelect: () => importModal.value = true },
@@ -145,6 +145,8 @@ async function updateSearch(fullDn: string){
   </div>
   <SearchModal v-model="searchModal" :items @searched="search" />
   <DnAddModal v-if="user.admin" v-model="addDnModal" :base-dn="items?.[0]?.fullDn || ''" @refresh="updateSearch" />
+  <DnCopyModal v-if="user.admin" :items @refresh="() => refreshAll(true)" />
+  <DnMoveModal v-if="user.admin" :items @refresh="() => refreshAll(true)" />
   <DnDeleteModal v-if="user.admin" @refresh="() => refreshAll(true)" />
   <ImportModal v-if="user.admin" v-model="importModal" @refresh="refreshAll" />
   <AttributeAddModal v-if="user.admin" @refresh="refreshAttributes" />
