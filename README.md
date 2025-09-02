@@ -15,6 +15,8 @@
    </a>
 </p>
 
+https://github.com/user-attachments/assets/2e3a476c-90e7-4969-ade3-3bf6ce6ec361
+
 ## ✨ Reason
 
 At [CBPF](https://cbpf.br), where I work, we use LDAP Admin to make small adjustments to our OpenLDAP server. However, LDAP Admin is a Windows-only tool, which creates issues for team members who use macOS or Linux. To solve this, I developed Ldap-Nel, a web-based application that can be accessed from any platform, anywhere—making LDAP management more accessible and convenient for the whole team.\
